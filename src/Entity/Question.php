@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\QuestionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: QuestionRepository::class)]
+class Question
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $titled = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $level = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $type = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $image = null;
+
+    /**
+     * @var Collection<int, Answer>
+     */
+    #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question')]
+    private Collection $Reponses;
+
+    public function __construct()
+    {
+        $this->Reponses = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitled(): ?string
+    {
+        return $this->titled;
+    }
+
+    public function setTitled(string $titled): static
+    {
+        $this->titled = $titled;
+
+        return $this;
+    }
+
+    public function getLevel(): ?string
+    {
+        return $this->level;
+    }
+
+    public function setLevel(string $level): static
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getReponses(): Collection
+    {
+        return $this->Reponses;
+    }
+
+    public function addReponses(Answer $Reponses): static
+    {
+        if (!$this->Reponses->contains($Reponses)) {
+            $this->Reponses->add($Reponses);
+            $Reponses->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReponses(Answer $Reponses): static
+    {
+        if ($this->Reponses->removeElement($Reponses)) {
+            // set the owning side to null (unless already changed)
+            if ($Reponses->getQuestion() === $this) {
+                $Reponses->setQuestion(null);
+            }
+        }
+
+        return $this;
+    }
+}
