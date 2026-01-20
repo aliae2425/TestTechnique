@@ -3,10 +3,79 @@
 
 {# Vous pouvez surcharger des blocs spécifiques #}
 {% block main %}
-    <div class="alert alert-info">
-        Ceci est mon interface personnalisée pour les Questions !
-    </div>
+    <div class="row">
+        {# Left Column: List of Questions #}
+        <div class="col-md-4" style="border-right: 1px solid #dee2e6; max-height: calc(100vh - 200px); overflow-y: auto;">
+            <h4 class="mb-3">Questions existantes</h4>
+            
+            {% if entities is defined and entities|length > 0 %}
+                {% for entity in entities %}
+                    {% set question = entity.instance %}
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate">{{ question.titled }}</h5>
+                            <div class="mt-2">
+                                <span class="badge bg-primary me-1">{{ question.level }}</span>
+                                <span class="badge bg-secondary">{{ question.type }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-light text-center">
+                    Aucune question disponible
+                </div>
+            {% endif %}
+        </div>
 
-    {# Pour afficher le contenu standard de la liste en dessous #}
-    {{ parent() }}
+        {# Right Column: Creation Form #}
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Nouvelle Question</h5>
+                </div>
+                <div class="card-body">
+                    {# Note: This is a static HTML form. To make it functional, 
+                       you would typically handle the form in the controller and pass 'form' variable, 
+                       or configure the action to submit to the 'new' endpoint. 
+                    #}
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Intitulé de la question</label>
+                            <input type="text" class="form-control" placeholder="Posez votre question...">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Niveau</label>
+                                <select class="form-select">
+                                    <option selected>Choisir un niveau...</option>
+                                    <option value="facile">Facile</option>
+                                    <option value="moyen">Moyen</option>
+                                    <option value="difficile">Difficile</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Type</label>
+                                <select class="form-select">
+                                    <option selected>Choisir un type...</option>
+                                    <option value="qcm">QCM</option>
+                                    <option value="libre">Libre</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control">
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Créer la question</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
