@@ -1,0 +1,12 @@
+{# templates/admin/question/index.html.twig #}
+{% extends '@EasyAdmin/crud/index.html.twig' %}
+
+{# Vous pouvez surcharger des blocs spécifiques #}
+{% block main %}
+    <div class="alert alert-info">
+        Ceci est mon interface personnalisée pour les Questions !
+    </div>
+
+    {# Pour afficher le contenu standard de la liste en dessous #}
+    {{ parent() }}
+{% endblock %}
