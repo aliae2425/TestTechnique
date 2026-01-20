@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your custom styles for EasyAdmin */
+.card-body {
+    @apply p-4;
+}

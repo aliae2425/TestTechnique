@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Entity\Question;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
@@ -29,7 +30,13 @@ class DashboardController extends AbstractDashboardController
     public function configureCrud(): Crud
     {
         return parent::configureCrud()
-            ->rendercontentMaximized();
+            ->renderContentMaximized();
+    }
+
+    public function configureAssets(): Assets
+    {
+        return Assets::new()
+            ->addCssFile('admin');
     }
 
     public function configureMenuItems(): iterable
