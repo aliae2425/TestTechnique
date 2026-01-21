@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\QuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
@@ -24,7 +25,7 @@ class Question
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
     /**
@@ -32,6 +33,9 @@ class Question
      */
     #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question')]
     private Collection $Reponses;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $Description = null;
 
     public function __construct()
     {
@@ -117,6 +121,18 @@ class Question
                 $Reponses->setQuestion(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+
+    public function setDescription(string $Description): static
+    {
+        $this->Description = $Description;
 
         return $this;
     }
