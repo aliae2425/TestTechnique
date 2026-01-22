@@ -62,12 +62,12 @@ class QuestionCrudController extends AbstractCrudController
                 fn (UploadedFile $file): string => sprintf('upload_%d_%s.%s', random_int(1, 999), $file->getClientOriginalName(), $file->guessExtension())
             );
         
-        yield FormField::addRow();
-        yield FormField::addColumn(12);
-        yield FormField::addFieldset('Réponses');
-        yield CollectionField::new('Reponses', 'Réponses')
-            ->setEntryType(AnswerType::class)
-            ->hideOnIndex();
+        // yield FormField::addRow();
+        // yield FormField::addColumn(12);
+        // yield FormField::addFieldset('Réponses');
+        // yield CollectionField::new('Reponses', 'Réponses')
+        //     ->setEntryType(AnswerType::class)
+        //     ->hideOnIndex();
     }
 
 }
