@@ -31,7 +31,7 @@ class Question
     /**
      * @var Collection<int, Answer>
      */
-    #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question')]
+    #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $Reponses;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -103,22 +103,22 @@ class Question
         return $this->Reponses;
     }
 
-    public function addReponses(Answer $Reponses): static
+    public function addReponse(Answer $reponse): static
     {
-        if (!$this->Reponses->contains($Reponses)) {
-            $this->Reponses->add($Reponses);
-            $Reponses->setQuestion($this);
+        if (!$this->Reponses->contains($reponse)) {
+            $this->Reponses->add($reponse);
+            $reponse->setQuestion($this);
         }
 
         return $this;
     }
 
-    public function removeReponses(Answer $Reponses): static
+    public function removeReponse(Answer $reponse): static
     {
-        if ($this->Reponses->removeElement($Reponses)) {
+        if ($this->Reponses->removeElement($reponse)) {
             // set the owning side to null (unless already changed)
-            if ($Reponses->getQuestion() === $this) {
-                $Reponses->setQuestion(null);
+            if ($reponse->getQuestion() === $this) {
+                $reponse->setQuestion(null);
             }
         }
 

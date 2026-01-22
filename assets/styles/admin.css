@@ -2,7 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Your custom styles for EasyAdmin */
-.card-body {
-    @apply p-4;
+/* Compteur pour les réponses dans la collection EasyAdmin */
+.field-collection {
+    counter-reset: reponse-counter;
+}
+
+.field-collection-item {
+    counter-increment: reponse-counter;
+}
+
+.field-collection-item .accordion-button::before {
+    content: "N° " counter(reponse-counter) " - ";
+    margin-right: 8px;
+    font-weight: bold;
+    color: #0d6efd; /* Couleur bleue EasyAdmin */
 }

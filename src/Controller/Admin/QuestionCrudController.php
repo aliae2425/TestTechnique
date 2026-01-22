@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Question;
+use App\Entity\Answer;
 use App\Form\AnswerType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -19,6 +20,18 @@ class QuestionCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Question::class;
+    }
+
+    public function createEntity(string $entityFqcn)
+    {
+        $question = new Question();
+        
+        // Initialiser avec 4 réponses vides
+        for ($i = 0; $i < 4; $i++) {
+            $question->addReponse(new Answer());
+        }
+
+        return $question;
     }
 
     // public function configureCrud(Crud $crud): Crud
@@ -59,15 +72,18 @@ class QuestionCrudController extends AbstractCrudController
             ->setUploadDir('public/uploads/images/questions/')
             ->setBasePath('/uploads/images/questions/')
             ->setUploadedFileNamePattern(
-                fn (UploadedFile $file): string => sprintf('upload_%d_%s.%s', random_int(1, 999), $file->getClientOriginalName(), $file->guessExtension())
-            );
-        
-        // yield FormField::addRow();
-        // yield FormField::addColumn(12);
-        // yield FormField::addFieldset('Réponses');
-        // yield CollectionField::new('Reponses', 'Réponses')
-        //     ->setEntryType(AnswerType::class)
-        //     ->hideOnIndex();
+                    fn (UploadedFile $file): string => sprintf('upload_%d_%s.%s', random_int(1, 999), $file->getClientOriginalName(), $file->guessExtension())
+                );
+            
+        yield FormField::addRow();
+        yield FormField::addColumn(12);
+        yield FormField::addFieldset('Réponses');
+        yield CollectionField::new('Reponses', 'Réponses')
+            ->allowAdd(false)
+            ->allowDelete(false)
+            ->setEntryType(AnswerType::class)
+            ->setFormTypeOption('by_reference', false)
+            ->hideOnIndex();
     }
 
 }

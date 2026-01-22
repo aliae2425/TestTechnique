@@ -14,12 +14,19 @@ class AnswerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('text')
-            ->add('is_correct')
-            ->add('feedback')
-            ->add('question', EntityType::class, [
-                'class' => Question::class,
-                'choice_label' => 'id',
+            ->add('text', null, [
+                'label' => 'Texte de la réponse',
+                'row_attr' => ['class' => 'col-md-10'],
+            ])
+            ->add('is_correct', null, [
+                'label' => 'Bonne réponse ?',
+                'row_attr' => ['class' => 'col-md-2'],
+                'attr' => ['class' => 'form-check-input'],
+            ])
+            ->add('feedback', null, [
+                'label' => 'Explication (Feedback)',
+                'row_attr' => ['class' => 'col-md-12'],
+                'attr' => ['placeholder' => 'Pourquoi c\'est juste/faux ?'],
             ])
         ;
     }

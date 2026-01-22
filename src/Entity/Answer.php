@@ -27,6 +27,11 @@ class Answer
     #[ORM\Column(type: Types::TEXT)]
     private ?string $feedback = null;
 
+    public function __toString(): string
+    {
+        return 'Réponse'; // Ce texte sera complété par le CSS (N°1, N°2...)
+    }
+
     public function getId(): ?int
     {
         return $this->id;
