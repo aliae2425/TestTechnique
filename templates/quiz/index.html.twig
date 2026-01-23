@@ -3,18 +3,86 @@
 {% block title %}Hello QuizController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    {# Header #}
+    <div class="d-flex justify-content-between align-items-center py-3 px-4 border-bottom bg-white fixed-top" style="z-index: 1000;">
+        <div>
+            <h5 class="fw-bold mb-0">Quiz en cours</h5>
+            <small class="text-muted">Répondez aux 50 questions</small>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div class="bg-primary bg-opacity-10 text-primary px-3 py-2 rounded fw-bold">
+                <i class="far fa-clock me-2"></i> 37:29
+            </div>
+            <a href="#" class="text-decoration-none text-muted fs-4">&times;</a>
+        </div>
+    </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {# Spacer for fixed header #}
+    <div style="height: 70px;"></div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/00_Dev/TestTechnique/src/Controller/QuizController.php</code></li>
-        <li>Your template at <code>D:/00_Dev/TestTechnique/templates/quiz/index.html.twig</code></li>
-    </ul>
-</div>
+    {# Progress Bar #}
+    <div class="px-4 py-3 bg-light">
+        <div class="d-flex justify-content-between text-muted small mb-1">
+            <span>Q. 1 / 50</span>
+            <span>0 pts</span>
+        </div>
+        <div class="progress" style="height: 6px;">
+            <div class="progress-bar bg-primary" role="progressbar" style="width: 2%" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+
+    {# Main Content #}
+    <div class="container py-5" style="max-width: 800px;">
+        {# Auto-generated decorative image #}
+        <div class="mb-4 text-center">
+            <img src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                 alt="Illustration" 
+                 class="img-fluid rounded-4 shadow-sm"
+                 style="max-height: 300px; width: 100%; object-fit: cover;">
+        </div>
+
+        {# Question #}
+        <div class="mb-5">
+            <h2 class="fw-bold mb-2">Question Test #1: Combien font 7 + 14 ?</h2>
+            <p class="text-muted fs-5">Question de mathématiques élémentaires générée automatiquement.</p>
+        </div>
+
+        {# Answers Grid #}
+        <div class="row g-3">
+            {% set answers = [
+                {'id': 'A', 'text': '21'},
+                {'id': 'B', 'text': '22'},
+                {'id': 'C', 'text': '19'},
+                {'id': 'D', 'text': '31'}
+            ] %}
+
+            {% for answer in answers %}
+                <div class="col-md-6">
+                    <label class="card h-100 border p-3 cursor-pointer shadow-sm hover-shadow transition-all" style="cursor: pointer;">
+                        <div class="d-flex align-items-center">
+                            <input type="radio" name="quiz_answer" class="d-none">
+                            <div class="rounded-circle border d-flex align-items-center justify-content-center text-muted fw-bold me-3" 
+                                 style="width: 40px; height: 40px; min-width: 40px;">
+                                {{ answer.id }}
+                            </div>
+                            <span class="fs-5">{{ answer.text }}</span>
+                        </div>
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <style>
+        .hover-shadow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+            border-color: #0d6efd !important;
+        }
+        .hover-shadow:hover .rounded-circle {
+            background-color: #0d6efd;
+            color: white !important;
+            border-color: #0d6efd !important;
+        }
+    </style>
 {% endblock %}
