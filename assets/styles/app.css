@@ -120,3 +120,91 @@
         @apply bg-background text-foreground;
     }
 }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc; /* Slate 50 */
+        color: #1e293b; /* Slate 800 */
+        overflow-x: hidden;
+      }
+
+      /* Light Mode Glassmorphism */
+      .glass {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+      }
+      .glass-card:hover {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(56, 189, 248, 0.3);
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.08);
+      }
+      
+      /* Inputs adapted for light mode */
+      .glass-input {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(203, 213, 225, 0.6); /* Slate 300 */
+        color: #0f172a;
+      }
+      .glass-input:focus {
+        background: white;
+        border-color: #0ea5e9;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+      }
+
+      /* Pastel Blobs for Light Mode */
+      .blob {
+        position: absolute;
+        filter: blur(80px);
+        z-index: -1;
+        opacity: 0.8;
+        animation: float 10s infinite alternate;
+      }
+      @keyframes float {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(30px, 50px); }
+      }
+
+      /* 3D Isometric Grid Utilities */
+      .iso-scene {
+        perspective: 1200px;
+        transform-style: preserve-3d;
+      }
+      .iso-grid {
+        transform: rotateX(55deg) rotateZ(45deg) rotateY(0deg);
+        transform-style: preserve-3d;
+      }
+      .iso-card-item {
+        transform-style: preserve-3d;
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 
+          -1px 1px 0px rgba(0,0,0,0.05),
+          -2px 2px 0px rgba(0,0,0,0.05),
+          -3px 3px 0px rgba(0,0,0,0.05),
+          -4px 4px 0px rgba(0,0,0,0.05),
+          -10px 10px 20px rgba(0,0,0,0.1);
+      }
+      .iso-card-item:hover {
+        transform: translateZ(30px);
+        background: white;
+        box-shadow: 
+          -1px 1px 0px rgba(56, 189, 248, 0.1),
+          -2px 2px 0px rgba(56, 189, 248, 0.1),
+          -10px 10px 40px rgba(56, 189, 248, 0.15);
+      }
+      .iso-text {
+        transform: rotateZ(-45deg) rotateX(0deg); /* Counter rotation to make text readable-ish or just styled */
+      }

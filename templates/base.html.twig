@@ -5,6 +5,7 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
+                <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
         {% endblock %}
 
         {% block javascripts %}
@@ -12,6 +13,37 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="relative min-h-screen w-full overflow-hidden text-slate-800">
+
+        <div class="blob w-96 h-96 bg-cyan-200 rounded-full top-0 left-0 -translate-x-1/2 -translate-y-1/2 mix-blend-multiply blur-3xl"></div>
+        <div class="blob w-[600px] h-[600px] bg-purple-200 rounded-full bottom-0 right-0 translate-x-1/3 translate-y-1/3 mix-blend-multiply blur-3xl delay-1000"></div>
+        <div class="blob w-80 h-80 bg-blue-200 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mix-blend-multiply opacity-50 blur-3xl"></div>
+        
+          <!-- Navbar -->
+        <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4 glass border-b-0">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white shadow-md">R</div>
+                <span class="text-xl font-bold tracking-tight text-slate-800">Revit<span class="text-cyan-600 font-light">Academy</span></span>
+            </div>
+            {% block nav_extra %}
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+                    <a href="#" class="hover:text-cyan-600 transition-colors">Formations</a>
+                    <a href="#" class="hover:text-cyan-600 transition-colors">Mentorats</a>
+                    <a href="#" class="hover:text-cyan-600 transition-colors">Ressources</a>
+                    <a href="#" class="hover:text-cyan-600 transition-colors">Tarifs</a>
+                </div>
+                <button class="hidden md:block px-5 py-2 rounded-full glass-card hover:bg-white text-sm font-semibold text-slate-700 hover:text-cyan-600 border-white transition-all shadow-sm">
+                    Espace Membre
+                </button>
+            {% endblock %}
+            </div>
+        </nav>
+
+        {% block body %}
+            
+        {% endblock %}
+
+        </div>
     </body>
 </html>
