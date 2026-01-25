@@ -3,36 +3,68 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+    <div class="flex min-h-screen w-full items-center justify-center px-4">
+    <twig:Card class="w-full max-w-sm">
+        <twig:Card:Header>
+            <twig:Card:Title>Login to your account</twig:Card:Title>
+            <twig:Card:Description>
+                Enter your email below to login to your account
+            </twig:Card:Description>
+        </twig:Card:Header>
+        <form method="post">
+            <twig:Card:Content>
+                {% if error %}
+                    <twig:Alert variant="destructive">
+                        <twig:ux:icon name="tabler:alert-circle" class="h-4 w-4" />
+                        <twig:Alert:Title>Error</twig:Alert:Title>
+                        <twig:Alert:Description>
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </twig:Alert:Description>
+                    </twig:Alert>
+                    <div class="alert alert-danger"></div>
+                {% endif %}
 
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
-            </div>
-        {% endif %}
+                {% if app.user %}
+                    <div class="mb-3">
+                        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+                    </div>
+                {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+                <div class="flex flex-col gap-6">
+                    <div class="grid gap-2">
+                        <twig:Label for="username">Email</twig:Label>
+                        <twig:Input
+                            id="username"
+                            type="email"
+                            value="{{ last_username }}" name="_username" autocomplete="email"
+                            placeholder="m@example.com"
+                            required autofocus
+                        />
+                    </div>
 
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
+                    <div class="grid gap-2">
+                        <div class="flex items-center">
+                            <twig:Label for="password">Password</twig:Label>
+                            <a
+                                href="#"
+                                class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                            >
+                                Forgot your password?
+                            </a>
+                        </div>
+                        <twig:Input name="_password" id="password" autocomplete="current-password" required />
+                    </div>
 
-            <div class="checkbox mb-3">
-                <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
-            </div>
-        #}
+                    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-    </form>
+                </div>
+            </twig:Card:Content>
+            <twig:Card:Footer class="flex-col gap-2">
+                    <twig:Button type="submit" class="w-full">
+                        Login
+                    </twig:Button>
+            </twig:Card:Footer>
+        </form>
+    </twig:Card>
+    </div>
 {% endblock %}
