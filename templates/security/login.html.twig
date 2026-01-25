@@ -16,18 +16,18 @@
                 {% if error %}
                     <twig:Alert variant="destructive">
                         <twig:ux:icon name="tabler:alert-circle" class="h-4 w-4" />
-                        <twig:Alert:Title>Error</twig:Alert:Title>
-                        <twig:Alert:Description>
-                            {{ error.messageKey|trans(error.messageData, 'security') }}
-                        </twig:Alert:Description>
+                        <twig:Alert:Title>{{ error.messageKey|trans(error.messageData, 'security') }}</twig:Alert:Title>
                     </twig:Alert>
-                    <div class="alert alert-danger"></div>
                 {% endif %}
 
                 {% if app.user %}
-                    <div class="mb-3">
-                        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
-                    </div>
+                    <twig:Alert>
+                        <twig:ux:icon name="tabler:circle-check" class="h-4 w-4" />
+                        <twig:Alert:Title>You are logged in as {{ app.user.userIdentifier }}</twig:Alert:Title>
+                        <twig:Alert:Description>
+                            <a href="{{ logout_path() }}">Logout</a>
+                        </twig:Alert:Description>
+                    </twig:Alert>
                 {% endif %}
 
                 <div class="flex flex-col gap-6">
@@ -52,7 +52,7 @@
                                 Forgot your password?
                             </a>
                         </div>
-                        <twig:Input name="_password" id="password" autocomplete="current-password" required />
+                        <twig:Input type="password" name="_password" id="password" autocomplete="current-password" required />
                     </div>
 
                     <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
