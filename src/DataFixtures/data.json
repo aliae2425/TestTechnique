@@ -1,0 +1,1402 @@
+[
+    {
+        "title": "Filtre de Phase",
+        "level": "Difficile",
+        "type": "Documentation",
+        "Description": "Dans le filtre '04_Com', comment s'affichent les éléments 'Existants' ?",
+        "options": [
+            {
+                "label": "Remplacés par un style graphique",
+                "isCorrect": false,
+                "feedback": "Faux, c'est le réglage 'Remplacé'."
+            },
+            {
+                "label": "Par catégorie (matériaux réels)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Non affichés",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "En demi-teinte",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Assignation Gabarit",
+        "level": "Moyen",
+        "type": "Interfaces",
+        "Description": "Quel est l'effet de l'assignation d'un gabarit de vue ?",
+        "options": [
+            {
+                "label": "Application unique des réglages",
+                "isCorrect": false,
+                "feedback": "C'est 'Appliquer les propriétés'."
+            },
+            {
+                "label": "Contrôle et verrouillage permanent",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Création d'une nouvelle vue",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Suppression des filtres",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Styles d'objets",
+        "level": "Difficile",
+        "type": "Interfaces",
+        "Description": "Quelle est la portée des Styles d'objets ?",
+        "options": [
+            {
+                "label": "La vue active uniquement",
+                "isCorrect": false,
+                "feedback": "C'est le rôle de VV."
+            },
+            {
+                "label": "L'ensemble du projet",
+                "isCorrect": true,
+                "feedback": "Correct, c'est un paramètre global."
+            },
+            {
+                "label": "Les fichiers liés uniquement",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Uniquement les familles",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Masquage Temporaire",
+        "level": "Facile",
+        "type": "Interfaces",
+        "Description": "Comment masquer une catégorie sans modifier le VV ?",
+        "options": [
+            {
+                "label": "Supprimer les éléments",
+                "isCorrect": false,
+                "feedback": "Action destructive."
+            },
+            {
+                "label": "Outil Masquer la catégorie (lunettes)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Changer la phase",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Fermer Revit",
+                "isCorrect": false,
+                "feedback": "Pas très utile !"
+            }
+        ]
+    },
+    {
+        "title": "Coordination",
+        "level": "Difficile",
+        "type": "Collaboration",
+        "Description": "Quelle fonction envoie les coordonnées vers un lien ?",
+        "options": [
+            {
+                "label": "Acquérir les coordonnées",
+                "isCorrect": false,
+                "feedback": "C'est l'inverse."
+            },
+            {
+                "label": "Publier les coordonnées",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Lier par coordonnées partagées",
+                "isCorrect": false,
+                "feedback": "C'est une méthode d'insertion."
+            },
+            {
+                "label": "Réinitialiser le point topo",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Familles Imbriquées",
+        "level": "Difficile",
+        "type": "Modélisation",
+        "Description": "Quel paramètre permet de choisir un composant imbriqué dans le projet ?",
+        "options": [
+            {
+                "label": "Paramètre de texte",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Libellé (Type de famille)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Paramètre Oui\/Non",
+                "isCorrect": false,
+                "feedback": "Limite à deux choix."
+            },
+            {
+                "label": "Paramètre d'entier",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Paramètre de rapport",
+        "level": "Difficile",
+        "type": "Modélisation",
+        "Description": "Un paramètre de rapport peut piloter une formule si :",
+        "options": [
+            {
+                "label": "Il est partagé",
+                "isCorrect": false,
+                "feedback": "Pas obligatoire."
+            },
+            {
+                "label": "Il mesure entre deux références d'hôte",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Il est un paramètre de type",
+                "isCorrect": false,
+                "feedback": "Impossible."
+            },
+            {
+                "label": "Il est dans une nomenclature",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Profils de mur",
+        "level": "Moyen",
+        "type": "Modélisation",
+        "Description": "Où définir un relief automatique ?",
+        "options": [
+            {
+                "label": "Dans VV",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Dans la structure du mur (Reliefs)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Dans les options de phase",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "In-situ",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Niveau de détail",
+        "level": "Moyen",
+        "type": "Interfaces",
+        "Description": "Pourquoi mon joint creux disparaît en plan ?",
+        "options": [
+            {
+                "label": "Le mur est masqué",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Niveau de détail Faible",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Mauvaise phase",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Échelle trop petite",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Annotation",
+        "level": "Difficile",
+        "type": "Documentation",
+        "Description": "Outil pour étiqueter les matériaux d'un mur multicouche ?",
+        "options": [
+            {
+                "label": "Étiquette de mur",
+                "isCorrect": false,
+                "feedback": "C'est global au type."
+            },
+            {
+                "label": "Note d'identification (Keynote)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Texte",
+                "isCorrect": false,
+                "feedback": "Pas dynamique."
+            },
+            {
+                "label": "Étiquette de pièce",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Sous-projets",
+        "level": "Difficile",
+        "type": "Collaboration",
+        "Description": "Que signifie 'Emprunter' un élément ?",
+        "options": [
+            {
+                "label": "Devenir propriétaire définitif",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Modifier sans posséder le sous-projet",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Supprimer l'élément",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Le copier ailleurs",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Variantes",
+        "level": "Difficile",
+        "type": "Modélisation",
+        "Description": "Comment modifier un élément dans une variante ?",
+        "options": [
+            {
+                "label": "Double clic",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Activer l'édition de la variante",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Le supprimer de la base",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Utiliser VV",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Copier-Contrôler",
+        "level": "Difficile",
+        "type": "Collaboration",
+        "Description": "Utilité principale de Copier\/Contrôler ?",
+        "options": [
+            {
+                "label": "Copier des murs pour déco",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Suivre les modifications du lien structure",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Exporter en IFC",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Réduire le poids du fichier",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Point de base",
+        "level": "Moyen",
+        "type": "Collaboration",
+        "Description": "Différence Point de base vs Point Topo ?",
+        "options": [
+            {
+                "label": "Aucune",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Local (Projet) vs Réel (Géomètre)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Couleur uniquement",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Un seul est visible",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Nomenclature",
+        "level": "Difficile",
+        "type": "Analyse",
+        "Description": "Comment regrouper les lignes identiques ?",
+        "options": [
+            {
+                "label": "Trier par prix",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Décocher 'Détailler chaque occurrence'",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Utiliser un filtre",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Supprimer les doublons",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Filtres de vue",
+        "level": "Difficile",
+        "type": "Interfaces",
+        "Description": "Priorité entre Filtre de vue et VV ?",
+        "options": [
+            {
+                "label": "VV est prioritaire",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Le Filtre est prioritaire",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "C'est aléatoire",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Ils fusionnent",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Paramètres partagés",
+        "level": "Difficile",
+        "type": "Analyse",
+        "Description": "Où sont stockés les paramètres partagés ?",
+        "options": [
+            {
+                "label": "Dans le .rvt",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Dans un fichier .txt externe",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Sur le Cloud Autodesk",
+                "isCorrect": false,
+                "feedback": "Pas par défaut."
+            },
+            {
+                "label": "Dans le registre Windows",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Familles - Connecteurs",
+        "level": "Difficile",
+        "type": "Modélisation",
+        "Description": "Rôle des connecteurs dans une famille ?",
+        "options": [
+            {
+                "label": "Décoration",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Flux et liaison système",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Ancrage au sol",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Calcul du poids",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Topographie",
+        "level": "Moyen",
+        "type": "Modélisation",
+        "Description": "Comment créer un terrain ?",
+        "options": [
+            {
+                "label": "Sol classique",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Surface topo par points ou import",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Mur horizontal",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Composant in-situ",
+                "isCorrect": false,
+                "feedback": "Moins efficace."
+            }
+        ]
+    },
+    {
+        "title": "Rendu",
+        "level": "Facile",
+        "type": "Interfaces",
+        "Description": "Moteur de rendu natif de Revit ?",
+        "options": [
+            {
+                "label": "V-Ray",
+                "isCorrect": false,
+                "feedback": "C'est un plugin."
+            },
+            {
+                "label": "Autodesk Raytracer",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Enscape",
+                "isCorrect": false,
+                "feedback": "C'est un plugin."
+            },
+            {
+                "label": "Lumion",
+                "isCorrect": false,
+                "feedback": "Logiciel externe."
+            }
+        ]
+    },
+    {
+        "title": "Escaliers",
+        "level": "Difficile",
+        "type": "Modélisation",
+        "Description": "Comment changer la structure d'une volée ?",
+        "options": [
+            {
+                "label": "Propriétés de type de la volée",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Modifier le garde-corps",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Changer le niveau",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Utiliser l'outil Peinture",
+                "isCorrect": false,
+                "feedback": "Mauvaise pratique."
+            }
+        ]
+    },
+    {
+        "title": "Toits",
+        "level": "Moyen",
+        "type": "Modélisation",
+        "Description": "Toit par extrusion vs Toit par tracé ?",
+        "options": [
+            {
+                "label": "L'un est 2D, l'autre 3D",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Profil vertical vs Emprise au sol",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Aucune différence",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Extrusion est pour les murs",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Garde-corps",
+        "level": "Difficile",
+        "type": "Modélisation",
+        "Description": "Comment gérer l'espacement des barreaux ?",
+        "options": [
+            {
+                "label": "Dans le motif de remplissage",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Configuration du placement des barreaux",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Changer le matériau",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Modifier la ligne d'esquisse",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Zones de définition",
+        "level": "Difficile",
+        "type": "Interfaces",
+        "Description": "Utilité d'une zone de définition (Scope Box) ?",
+        "options": [
+            {
+                "label": "Couper la 3D",
+                "isCorrect": false,
+                "feedback": "C'est la zone de coupe."
+            },
+            {
+                "label": "Cadrer uniformément plusieurs vues",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Calculer des surfaces",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Créer des sous-projets",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Familles - Catalogues",
+        "level": "Difficile",
+        "type": "Modélisation",
+        "Description": "Format du fichier catalogue de types ?",
+        "options": [
+            {
+                "label": ".rvt",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": ".txt (même nom que la famille)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": ".xlsx",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": ".pdf",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Export IFC",
+        "level": "Difficile",
+        "type": "Analyse",
+        "Description": "L'IFC est un format :",
+        "options": [
+            {
+                "label": "Propriétaire",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "OpenBIM (Interopérable)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Uniquement pour AutoCAD",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "De rendu",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Lignes de détail",
+        "level": "Facile",
+        "type": "Documentation",
+        "Description": "Différence Ligne de détail vs Ligne de modèle ?",
+        "options": [
+            {
+                "label": "Couleur",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Vue spécifique (2D) vs Tout le modèle (3D)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Épaisseur",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Aucune",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Pièces",
+        "level": "Moyen",
+        "type": "Modélisation",
+        "Description": "Que faire si une pièce n'est pas fermée ?",
+        "options": [
+            {
+                "label": "Rien",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Utiliser des lignes de séparation de pièce",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Supprimer le mur",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Changer l'échelle",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Propriétés d'occurrence",
+        "level": "Facile",
+        "type": "Interfaces",
+        "Description": "Impact d'un changement d'occurrence ?",
+        "options": [
+            {
+                "label": "Tout le type change",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Seulement l'élément sélectionné",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Tout le projet change",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Rien ne se passe",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Matériaux",
+        "level": "Difficile",
+        "type": "Interfaces",
+        "Description": "Hachure de surface vs Hachure de coupe ?",
+        "options": [
+            {
+                "label": "Vue de face vs Élément coupé",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "2D vs 3D",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Interne vs Externe",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "C'est la même chose",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Audit",
+        "level": "Difficile",
+        "type": "Analyse",
+        "Description": "Utilité de la commande 'Purger les éléments non utilisés' ?",
+        "options": [
+            {
+                "label": "Supprimer le modèle",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Alléger le fichier en supprimant l'inutile",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Nettoyer les murs",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Réorganiser l'arborescence",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Assemblages",
+        "level": "Difficile",
+        "type": "Analyse",
+        "Description": "Rôle des assemblages (Assemblies) ?",
+        "options": [
+            {
+                "label": "Grouper des murs",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Créer des fiches de fabrication isolées",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Faire un rendu",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Calculer les ombres",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Groupes",
+        "level": "Moyen",
+        "type": "Analyse",
+        "Description": "Risque majeur des groupes ?",
+        "options": [
+            {
+                "label": "Trop de couleurs",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Instabilité si trop complexes\/imbriqués",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Disparition",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Pas de risque",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Détails",
+        "level": "Moyen",
+        "type": "Documentation",
+        "Description": "Composant de détail répétitif ?",
+        "options": [
+            {
+                "label": "Une famille 3D",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Une ligne 2D qui répète un symbole",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Un mur rideau",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Un escalier",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Libellés",
+        "level": "Moyen",
+        "type": "Documentation",
+        "Description": "Différence Texte vs Libellé dans une étiquette ?",
+        "options": [
+            {
+                "label": "Statique vs Dynamique (Paramètre)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Taille",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Couleur",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Aucune",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Murs Rideaux",
+        "level": "Difficile",
+        "type": "Modélisation",
+        "Description": "Comment changer un panneau par une porte ?",
+        "options": [
+            {
+                "label": "Utiliser l'outil porte sur le mur",
+                "isCorrect": false,
+                "feedback": "Inadapté."
+            },
+            {
+                "label": "Remplacer le panneau sélectionné par un type de porte de panneau",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Supprimer le panneau",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Modifier le profil du mur",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Surfaces",
+        "level": "Difficile",
+        "type": "Analyse",
+        "Description": "Nomenclature de surfaces vs de pièces ?",
+        "options": [
+            {
+                "label": "Brut vs Net",
+                "isCorrect": true,
+                "feedback": "Correct (généralement)."
+            },
+            {
+                "label": "Même chose",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Uniquement pour le logement",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "L'un est gratuit",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Paramètres globaux",
+        "level": "Difficile",
+        "type": "Analyse",
+        "Description": "Utilité d'un paramètre global ?",
+        "options": [
+            {
+                "label": "Lier des cotes dans le projet",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Exporter vers Excel",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Calculer la structure",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Changer le nom du projet",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "BIM 360 \/ ACC",
+        "level": "Difficile",
+        "type": "Collaboration",
+        "Description": "Le Cloud Autodesk permet :",
+        "options": [
+            {
+                "label": "De jouer en ligne",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "La co-conception en temps réel partout",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "De réduire le prix de Revit",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "D'imprimer en 3D",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Vues de dessin",
+        "level": "Moyen",
+        "type": "Documentation",
+        "Description": "Une vue de dessin (Drafting View) est :",
+        "options": [
+            {
+                "label": "Liée au modèle 3D",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Une vue 2D indépendante",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Une coupe",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Une vue 3D",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Révisions",
+        "level": "Difficile",
+        "type": "Documentation",
+        "Description": "Gestionnaire de révisions ?",
+        "options": [
+            {
+                "label": "Nuages de révision et tableaux",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "E-mail automatique",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Historique Windows",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Suppression des murs",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Sols",
+        "level": "Moyen",
+        "type": "Modélisation",
+        "Description": "Outil pour incliner un sol sans rampe ?",
+        "options": [
+            {
+                "label": "Flèche d'inclinaison ou Modification des sous-éléments",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Rotation",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Peinture",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Miroir",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Plafonds",
+        "level": "Facile",
+        "type": "Modélisation",
+        "Description": "Pourquoi je ne vois pas mon plafond ?",
+        "options": [
+            {
+                "label": "Il est transparent",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Je suis en vue de Plan d'étage (regard vers le bas)",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Il est trop haut",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Phase future",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Familles - Plans de référence",
+        "level": "Difficile",
+        "type": "Modélisation",
+        "Description": "Rôle de 'Est la référence faible' ?",
+        "options": [
+            {
+                "label": "Priorité de cotation",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Solidité du mur",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Visibilité 3D",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Poids de ligne",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Échelles",
+        "level": "Facile",
+        "type": "Interfaces",
+        "Description": "L'échelle impacte :",
+        "options": [
+            {
+                "label": "La taille du modèle 3D",
+                "isCorrect": false,
+                "feedback": "Faux (1:1)."
+            },
+            {
+                "label": "La taille des annotations et hachures",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Le prix du projet",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "La vitesse du PC",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Cotes",
+        "level": "Moyen",
+        "type": "Documentation",
+        "Description": "Contrainte d'égalité (EQ) ?",
+        "options": [
+            {
+                "label": "Calcule le prix",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Répartit les éléments uniformément",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Change la couleur",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Ferme le fichier",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Ombres",
+        "level": "Facile",
+        "type": "Interfaces",
+        "Description": "Comment activer les ombres ?",
+        "options": [
+            {
+                "label": "Bouton dans la barre de contrôle de vue",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Appuyer sur S",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Changer de phase",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Acheter une lampe",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Verrouillage",
+        "level": "Facile",
+        "type": "Interfaces",
+        "Description": "Icône Punaise (Pin) ?",
+        "options": [
+            {
+                "label": "Supprimer",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Empêcher le déplacement",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Favori",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Envoyer par mail",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Arborescence",
+        "level": "Moyen",
+        "type": "Interfaces",
+        "Description": "Peut-on trier l'arborescence ?",
+        "options": [
+            {
+                "label": "Non",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Oui, via l'Organisation de l'arborescence",
+                "isCorrect": true,
+                "feedback": "Correct."
+            },
+            {
+                "label": "Seulement par date",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "Par prix",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    },
+    {
+        "title": "Fin",
+        "level": "Difficile",
+        "type": "Analyse",
+        "Description": "Le BIM est-il un logiciel ?",
+        "options": [
+            {
+                "label": "Oui, c'est Revit",
+                "isCorrect": false,
+                "feedback": "Revit est un outil pour le BIM."
+            },
+            {
+                "label": "Non, c'est un processus\/méthodologie",
+                "isCorrect": true,
+                "feedback": "Exactement !"
+            },
+            {
+                "label": "C'est une marque de PC",
+                "isCorrect": false,
+                "feedback": "Faux."
+            },
+            {
+                "label": "C'est un format d'image",
+                "isCorrect": false,
+                "feedback": "Faux."
+            }
+        ]
+    }
+]
