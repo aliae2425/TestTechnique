@@ -48,8 +48,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Gestion des utilisateurs');
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
         yield MenuItem::section('Gestion des Quiz');
-        // yield MenuItem::linkToCrud('Quiz', 'fas fa-list', QuizTemplate::class);
-        // yield MenuItem::linkToCrud('Sessions', 'fas fa-calendar-check', QuizSession::class);
+        yield MenuItem::linkToCrud('Quiz', 'fas fa-list', QuizTemplate::class);
+        yield MenuItem::linkToCrud('Sessions', 'fas fa-calendar-check', QuizSession::class);
         yield MenuItem::linkToCrud('Questions', 'fas fa-question', Question::class);
 
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
