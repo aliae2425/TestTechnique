@@ -45,6 +45,11 @@ class QuizRule
         return $this->theme;
     }
 
+    public function __toString(): string
+    {
+        return sprintf('%s - %s (%d questions)', $this->theme, $this->level, $this->Quantity);
+    }
+
     public function setTheme(string $theme): static
     {
         $this->theme = $theme;
