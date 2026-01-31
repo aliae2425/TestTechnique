@@ -1,75 +1,87 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
-    <div class="flex min-h-screen w-full items-center justify-center px-4">
-    <twig:Card class="w-full max-w-sm">
-        <twig:Card:Header>
-            <twig:Card:Title>Login to your account</twig:Card:Title>
-            <twig:Card:Description>
-                Enter your email below to login to your account
-            </twig:Card:Description>
-        </twig:Card:Header>
-        <form method="post">
-            <twig:Card:Content>
-                {% if error %}
-                    <twig:Alert variant="destructive">
-                        <twig:ux:icon name="tabler:alert-circle" class="h-4 w-4" />
-                        <twig:Alert:Title>{{ error.messageKey|trans(error.messageData, 'security') }}</twig:Alert:Title>
-                    </twig:Alert>
-                {% endif %}
+    <div class="flex min-h-screen w-full">
+        {# Left Side - Form #}
+        <div class="flex w-full flex-col justify-center px-4 py-12 lg:w-1/2 lg:px-12">
+            <div class="mx-auto w-full max-w-sm">
+                <twig:Card class="w-full">
+                    <twig:Card:Header>
+                        <twig:Card:Title class="text-2xl font-bold">Connexion à votre compte</twig:Card:Title>
+                        <twig:Card:Description>
+                            Entrez votre email ci-dessous pour vous connecter
+                            {% if error %}
+                                <twig:Alert variant="destructive" class="mt-2">
+                                    <twig:ux:icon name="tabler:alert-circle" class="h-4 w-4" />
+                                    <twig:Alert:Title>{{ error.messageKey|trans(error.messageData, 'security') }}</twig:Alert:Title>
+                                </twig:Alert>
+                            {% endif %}
 
-                {% if app.user %}
-                    <twig:Alert>
-                        <twig:ux:icon name="tabler:circle-check" class="h-4 w-4" />
-                        <twig:Alert:Title>You are logged in as {{ app.user.userIdentifier }}</twig:Alert:Title>
-                        <twig:Alert:Description>
-                            <a href="{{ logout_path() }}">Logout</a>
-                        </twig:Alert:Description>
-                    </twig:Alert>
-                {% endif %}
+                            {% if app.user %}
+                                <twig:Alert class="mt-2">
+                                    <twig:ux:icon name="tabler:circle-check" class="h-4 w-4" />
+                                    <twig:Alert:Title>Vous êtes connecté en tant que {{ app.user.userIdentifier }}</twig:Alert:Title>
+                                    <twig:Alert:Description>
+                                        <a href="{{ logout_path() }}">Se déconnecter</a>
+                                    </twig:Alert:Description>
+                                </twig:Alert>
+                            {% endif %}
+                        </twig:Card:Description>
+                    </twig:Card:Header>
+                    <twig:Card:Content>
+                        <form method="post">
+                            <div class="flex flex-col gap-6">
+                                <div class="grid gap-2">
+                                    <twig:Label for="username">Email</twig:Label>
+                                    <twig:Input
+                                        id="username"
+                                        type="email"
+                                        value="{{ last_username }}" name="_username" autocomplete="email"
+                                        placeholder="m@example.com"
+                                        required autofocus
+                                    />
+                                </div>
 
-                <div class="flex flex-col gap-6">
-                    <div class="grid gap-2">
-                        <twig:Label for="username">Email</twig:Label>
-                        <twig:Input
-                            id="username"
-                            type="email"
-                            value="{{ last_username }}" name="_username" autocomplete="email"
-                            placeholder="m@example.com"
-                            required autofocus
-                        />
-                    </div>
+                                <div class="grid gap-2">
+                                    <div class="flex items-center">
+                                        <twig:Label for="password">Mot de passe</twig:Label>
+                                        <a
+                                            href="#"
+                                            class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                                        >
+                                            Mot de passe oublié ?
+                                        </a>
+                                    </div>
+                                    <twig:Input type="password" name="_password" id="password" autocomplete="current-password" required />
+                                </div>
 
-                    <div class="grid gap-2">
-                        <div class="flex items-center">
-                            <twig:Label for="password">Password</twig:Label>
-                            <a
-                                href="#"
-                                class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                            >
-                                Forgot your password?
-                            </a>
+                                <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+                            </div>
+                            <twig:Button type="submit" class="w-full mt-4">
+                                Se connecter
+                            </twig:Button>
+                        </form>
+                    </twig:Card:Content>
+                    <twig:Card:Footer class="flex justify-center">
+                        <div class="text-sm text-muted-foreground">
+                            Pas encore de compte ? 
+                            <a href="{{ path('app_register') }}" class="font-medium text-primary hover:underline">S'inscrire</a>
                         </div>
-                        <twig:Input type="password" name="_password" id="password" autocomplete="current-password" required />
-                    </div>
+                    </twig:Card:Footer>
+                </twig:Card>
+            </div>
+        </div>
 
-                    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-                </div>
-            </twig:Card:Content>
-            <twig:Card:Footer class="flex-col gap-2">
-                    <twig:Button type="submit" class="w-full">
-                        Login
-                    </twig:Button>
-            </twig:Card:Footer>
-            <a
-                href="{{ path('app_register') }}"
-                class="ml-auto inline-block text-sm underline-offset-4 hover:underline">
-                Register an account
-            </a>
-        </form>
-    </twig:Card>
+        {# Right Side - Image #}
+        <div class="hidden lg:block lg:w-1/2 relative bg-muted">
+            <img 
+                src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop" 
+                alt="Workspace" 
+                class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+            />
+        </div>
     </div>
 {% endblock %}
