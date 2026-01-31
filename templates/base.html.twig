@@ -17,82 +17,9 @@
           <!-- Navbar -->
         <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-white/60 backdrop-blur-lg border-b border-white/40 shadow-sm transition-all duration-300">
             <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white shadow-md">🍵</div>
-                <span class="text-xl font-bold tracking-tight text-slate-800">418<span class="text-cyan-600 font-light">Academy</span></span>
-            </div>
-            {% block nav_extra %}
-                <div class="hidden md:flex gap-8 text-sm font-medium text-slate-600">
-                    <a href="#" class="hover:text-cyan-600 transition-colors">Formations</a>
-                    <a href="#" class="hover:text-cyan-600 transition-colors">Tests</a>
-                    <a href="#" class="hover:text-cyan-600 transition-colors">Ressources</a>
-                </div>
-                {% if app.user %}
-                    <div class="relative group hidden md:block z-50">
-                        <button class="flex items-center gap-2 px-4 py-2 rounded-full glass-card hover:bg-white/80 text-sm font-semibold text-slate-700 border-white transition-all shadow-sm">
-                            <div class="w-6 h-6 rounded-full bg-cyan-100 text-cyan-700 flex items-center justify-center text-xs font-bold uppercase">
-                                {{ app.user.userIdentifier|first }}
-                            </div>
-                            <span class="max-w-[100px] truncate">{{ app.user.userIdentifier }}</span>
-                            <twig:ux:icon name="tabler:chevron-down" class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
-                        </button>
-                        
-                        <div class="absolute right-0 mt-2 w-56 rounded-xl bg-white/95 backdrop-blur-lg border border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right -translate-y-2 group-hover:translate-y-0 z-50">
-                            <div class="px-4 py-3 border-b border-slate-100">
-                                <p class="text-xs text-slate-500 mb-0.5">Connecté en tant que</p>
-                                <p class="text-sm font-semibold text-slate-800 truncate" title="{{ app.user.userIdentifier }}">{{ app.user.userIdentifier }}</p>
-                            </div>
-                            {# inclure barre d'xp et niveau  #}
-                            <div class="flex items-center gap-3 px-4 py-3">
-                                <div class="flex-1">
-                                    <div class="flex justify-between mb-1">
-                                        <span class="text-xs text-slate-500">XP</span>
-                                        <span class="text-xs text-slate-500">{{ app.user.xp ?? 0 }} / {{ app.user.xpNextLevel ?? 100 }}</span>
-                                    </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-2">
-                                        <div class="bg-cyan-500 h-2 rounded-full transition-all duration-300"
-                                             style="width: {{ ((app.user.xp ?? 0) / (app.user.xpNextLevel ?? 100)) * 100 }}%">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="relative">
-                                    <div class="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center">
-                                        <span class="text-cyan-700 font-bold text-lg">
-                                            {{ app.user.level ?? 1 }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="h-px bg-slate-100 mx-2 my-1"></div>
-                            <div class="p-1">
-                                <a href="{{ path('app_user_profile') }}" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-cyan-50 hover:text-cyan-700 transition-colors">
-                                    <twig:ux:icon name="tabler:user" class="w-4 h-4" />
-                                    Mon Profil
-                                </a>
-                            </div>
-                            <div class="p-1">
-                                <a href="{{ path('app_user_dashboard') }}" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-cyan-50 hover:text-cyan-700 transition-colors">
-                                    <twig:ux:icon name="tabler:layout-dashboard" class="w-4 h-4" />
-                                    Mon Espace
-                                </a>
-                            </div>
-                            <div class="h-px bg-slate-100 mx-2 my-1"></div>
-                            <div class="p-1">
-                                <a href="{{ path('app_logout') }}" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors">
-                                    <twig:ux:icon name="tabler:logout" class="w-4 h-4" />
-                                    Déconnexion
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <a 
-                        href="{{ path('app_login')}}"
-                        class="hidden md:block px-5 py-2 rounded-full glass-card hover:bg-white text-sm font-semibold text-slate-700 hover:text-cyan-600 border-white transition-all shadow-sm">
-                        Espace Membre
-                    </a>
-                {% endif %}
-            {% endblock %}
+                {% include 'navbar/_brand.html.twig' %}
+                {% include 'navbar/_links.html.twig' %}
+                {% include 'navbar/_user.html.twig' %}
             </div>
         </nav>
 
