@@ -3,21 +3,73 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+    <div class="flex min-h-screen w-full">
+        {# Left Side - Form #}
+        <div class="flex w-full flex-col justify-center px-4 py-12 lg:w-1/2 lg:px-12">
+            <div class="mx-auto w-full max-w-sm">
+                {% for flash_error in app.flashes('verify_email_error') %}
+                    <div class="mb-4 rounded-md bg-destructive/15 p-3 text-sm text-destructive" role="alert">{{ flash_error }}</div>
+                {% endfor %}
 
-    <h1>Register</h1>
+                <twig:Card class="w-full">
+                    <twig:Card:Header>
+                        <twig:Card:Title class="text-2xl font-bold">Inscription</twig:Card:Title>
+                        <twig:Card:Description>Créez votre compte pour commencer.</twig:Card:Description>
+                    </twig:Card:Header>
+                    <twig:Card:Content>
+                        {{ form_start(registrationForm, {'attr': {'class': 'space-y-4'}}) }}
+                            
+                            {% if not registrationForm.vars.valid %}
+                                <div class="mb-4 rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+                                    {{ form_errors(registrationForm) }}
+                                </div>
+                            {% endif %}
 
-    {{ form_errors(registrationForm) }}
+                            <div class="grid gap-2">
+                                <twig:Label for="{{ registrationForm.email.vars.id }}">Email</twig:Label>
+                                {{ form_widget(registrationForm.email, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                                <div class="text-[0.8rem] text-muted-foreground">
+                                    {{ form_errors(registrationForm.email) }}
+                                </div>
+                            </div>
+                            
+                            <div class="grid gap-2">
+                                <twig:Label for="{{ registrationForm.plainPassword.vars.id }}">Mot de passe</twig:Label>
+                                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                                <div class="text-[0.8rem] text-muted-foreground">
+                                    {{ form_errors(registrationForm.plainPassword) }}
+                                </div>
+                            </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                            <div class="flex items-center space-x-2">
+                                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground'}}) }}
+                                <label for="{{ registrationForm.agreeTerms.vars.id }}" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                    Accepter les conditions
+                                </label>
+                            </div>
+                            <div class="text-[0.8rem] text-muted-foreground">
+                                {{ form_errors(registrationForm.agreeTerms) }}
+                            </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                            <twig:Button type="submit" class="w-full mt-4">S'inscrire</twig:Button>
+                        {{ form_end(registrationForm) }}
+                    </twig:Card:Content>
+                    <twig:Card:Footer class="flex justify-center">
+                        <div class="text-sm text-muted-foreground">
+                            Déjà un compte ? <a href="{{ path('app_login') }}" class="font-medium text-primary hover:underline">Se connecter</a>
+                        </div>
+                    </twig:Card:Footer>
+                </twig:Card>
+            </div>
+        </div>
+
+        {# Right Side - Image #}
+        <div class="hidden lg:block lg:w-1/2 relative bg-muted">
+            <img 
+                src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop" 
+                alt="Workspace" 
+                class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+            />
+        </div>
+    </div>
 {% endblock %}

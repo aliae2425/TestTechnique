@@ -47,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $username = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -59,6 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->quizSessions = new ArrayCollection();
+        $this->lvl = 0; // Default level set to 1
     }
 
     public function getId(): ?int

@@ -11,6 +11,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use Symfony\Component\Form\Button;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -22,6 +25,8 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id')->hideOnForm();
+
+        yield FormField::addTab('Utilisateur');
         yield EmailField::new('email', 'Email');
         yield ChoiceField::new('roles', 'Rôles')
             ->setChoices([
@@ -31,6 +36,15 @@ class UserCrudController extends AbstractCrudController
             ->allowMultipleChoices();
         yield BooleanField::new('isVerified', 'Vérifié');
 
-    }
+        yield FormField::addTab('Détails personnels');
+        yield TextField::new('username', 'Nom d\'utilisateur');
+        yield TextField::new('name', 'Prénom');
+        yield TextField::new('lastName', 'Nom de famille');
+        yield IntegerField::new('lvl', 'Niveau');
+        
+        yield FormField::addTab('Resultats Quis');
+        yield FormField::addTab('formations');
+
+        }
     
 }
