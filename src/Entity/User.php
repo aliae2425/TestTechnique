@@ -56,10 +56,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $lvl = null;
 
+    #[ORM\Column]
+    private ?int $xp = null;
+
     public function __construct()
     {
         $this->quizSessions = new ArrayCollection();
-        $this->lvl = 0; // Default level set to 1
+        $this->lvl = 1; // Default level set to 1
+        $this->xp = 0; // Default XP set to 0
     }
 
     public function getId(): ?int
@@ -225,5 +229,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->lvl = $lvl;
 
         return $this;
+    }
+
+    public function getXp(): ?int
+    {
+        return $this->xp;
+    }
+
+    public function setXp(int $xp): static
+    {
+        $this->xp = $xp;
+
+        return $this;
+    }
+
+    /**
+     * Calcule l'XP nécessaire pour atteindre le prochain niveau.
+     * Exemple de formule : Le niveau N demande (N * 100) XP de plus que le précédent.
+     * Ou plus simple pour commencer : Seuil = Niveau * 100.
+     */
+    public function getXpNextLevel(): int
+    {
+        // Formule simple : 100 XP par niveau pour l'instant
+        // Niv 1 -> Objectif 100
+        // Niv 2 -> Objectif 200 (Total XP)
+        return $this->lvl * 100;
     }
 }
