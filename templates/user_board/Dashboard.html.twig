@@ -31,7 +31,7 @@
                 <div>
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Catégories</h3>
                     <div class="space-y-2">
-                        {% for cat in ['PHP', 'Symfony', 'JavaScript', 'Design Patterns', 'DevOps'] %}
+                        {% for cat in ['Modélisation', 'Documentation', 'Coordination', 'Familles', 'Plugins'] %}
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500/20">
                                 <span class="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">{{ cat }}</span>
@@ -44,7 +44,7 @@
                 <div>
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Tags Populaires</h3>
                     <div class="flex flex-wrap gap-2">
-                        {% for tag in ['frontend', 'backend', 'api', 'security', 'doctrine'] %}
+                        {% for tag in ['modélisation', 'documentation', 'coordination', 'familles', 'plugins'] %}
                             <button class="px-2 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-600 transition-colors border border-transparent hover:border-slate-300">
                                 #{{ tag }}
                             </button>
@@ -103,7 +103,7 @@
                         <div class="flex flex-col flex-1 gap-1">
                             <div class="flex items-start justify-between">
                                 <h3 class="font-bold text-slate-800 leading-tight group-hover:text-cyan-600 transition-colors line-clamp-2">
-                                    Quiz Symfony {{ i }}
+                                    Cours revit {{ i }}
                                 </h3>
                             </div>
                             <span class="text-xs font-semibold text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded-full w-fit">

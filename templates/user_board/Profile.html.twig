@@ -5,51 +5,51 @@
 {% block body %}
     <div class="min-h-screen bg-slate-50/50 ">
         {# Header / Banner #}
-        <div class="relative h-[450px] overflow-hidden group">
-             {# Fond abstrait ou image #}
-            <img src="{{ asset('images/profile_banner.jpg') }}" class="inset-0 w-full h-full object-cover" alt="Banner">
+        <div class="h-[350px] w-full relative overflow-hidden">
+            <img src="{{ asset('images/profile_banner.jpg') }}" class="w-full h-full object-cover" alt="Banner">
             <div class="absolute inset-0 bg-black/10"></div>
-            
-            {# Card Overlay #}
-            <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-r from-transparent via-white/80 to-white flex items-center">
-                <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-end justify-between h-full pb-6">
+        </div>
+
+        {# Frost Glass Header Card #}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10 mb-8">
+            <div class="bg-white/30 backdrop-blur-md border border-white/20 shadow-xl rounded-xl p-6">
+                <div class="flex flex-col md:flex-row items-end gap-6">
                     
-                    {# Left: Avatar & Info #}
-                    <div class="flex items-end gap-6 relative">
-                        {# Avatar (Orange Circle) #}
-                        <div class="relative -mb-2">
-                             <div class="w-36 h-36 rounded-full border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden">
-                                <span class="text-5xl font-bold text-white">{{ app.user.username|first|upper }}</span>
-                             </div>
-                        </div>
-                        
-                        {# Info (Red Text) #}
-                        <div class="mb-4">
-                            <h1 class="text-3xl font-bold leading-tight">{{ app.user.username }}</h1>
-                            <p class="font-medium flex items-center gap-2">
-                                {{ app.user.email }}
-                            </p>
-                        </div>
+                    {# Avatar #}
+                    <div class="relative -mt-20 flex-shrink-0">
+                         <div class="w-36 h-36 rounded-full border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden bg-slate-400">
+                             <span class="text-5xl font-bold text-white">{{ app.user.username|first|upper }}</span>
+                         </div>
                     </div>
 
-                    {# Right: Gamification #}
-                    <div class="flex items-center gap-5 pb-3">
-                        <div class="flex-1">
-                            <div class="flex justify-between mb-1">
-                                <span class="text-sm text-slate-500">XP</span>
-                                <span class="text-sm text-slate-500">{{ app.user.xp - app.user.xpForCurrentLevel }} / {{ app.user.xpForNextLevel - app.user.xpForCurrentLevel }}</span>
-                            </div>
-                            <div class="w-full bg-slate-100 rounded-full w-[350px] h-3">
-                                <div class="bg-cyan-500 h-3 rounded-full transition-all duration-300"
-                                        style="width: {{ app.user.levelsProgress }}%">
+                    {# Info #}
+                    <div class="flex-1 pb-2">
+                        <h1 class="text-3xl font-bold text-slate-900">{{ app.user.username }}</h1>
+                        <p class="font-medium text-slate-700 flex items-center gap-2">
+                            {{ app.user.email }}
+                        </p>
+                    </div>
+
+                    {# Gamification #}
+                    <div class="pb-2 w-full md:w-auto">
+                        <div class="flex items-center gap-5">
+                            <div class="flex-1 md:min-w-[300px]">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-semibold text-slate-800">XP</span>
+                                    <span class="text-sm text-slate-800">{{ app.user.xp - app.user.xpForCurrentLevel }} / {{ app.user.xpForNextLevel - app.user.xpForCurrentLevel }}</span>
+                                </div>
+                                <div class="w-full bg-white/50 rounded-full h-3 backdrop-blur-sm overflow-hidden">
+                                    <div class="bg-cyan-600 h-full rounded-full transition-all duration-300"
+                                            style="width: {{ app.user.levelsProgress }}%">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="relative">
-                            <div class="w-15 h-15 rounded-full bg-cyan-100 flex items-center justify-center">
-                                <span class="text-cyan-700 font-bold text-lg">
-                                    {{ app.user.lvl ?? 1 }}
-                                </span>
+                            <div class="relative">
+                                <div class="w-14 h-14 rounded-full bg-cyan-100 flex items-center justify-center shadow-md">
+                                    <span class="text-cyan-700 font-bold text-lg">
+                                        {{ app.user.lvl ?? 1 }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -57,6 +57,7 @@
             </div>
         </div>
 
+        {# Main Content #}
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
             <div class="flex flex-col lg:flex-row gap-8">
                 {# Sidebar Menu #}
@@ -86,93 +87,90 @@
 
                 {# Main Content #}
                 <div class="flex-1 space-y-6">
-                    {# Carte Informations Personnelles #}
-                    <twig:Card>
-                        <twig:Card:Header>
-                            <twig:Card:Title>Informations Personnelles</twig:Card:Title>
-                            <twig:Card:Description>Gérez vos informations publiques et privées.</twig:Card:Description>
-                        </twig:Card:Header>
-                        <twig:Card:Content>
-                            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
-                                
-                                {% for message in app.flashes('success') %}
-                                    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-                                        <span class="font-medium">Succès !</span> {{ message }}
-                                    </div>
-                                {% endfor %}
 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div class="space-y-2">
-                                        <twig:Label for="{{ form.name.vars.id }}">{{ form.name.vars.label }}</twig:Label>
-                                        {{ form_widget(form.name, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50', 'placeholder': 'Votre prénom'}}) }}
-                                        <div class="text-[0.8rem] text-muted-foreground">
-                                            {{ form_errors(form.name) }}
+                    {% block main_content %}
+                        {# Carte Statistiques #}
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <twig:Card class="md:col-span-1">
+                                <twig:Card:Content class="pt-6 text-center">
+                                    <div class="mb-2 mx-auto w-12 h-12 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600">
+                                        <twig:ux:icon name="tabler:badges" class="w-6 h-6" />
+                                    </div>
+                                    <div class="text-3xl font-bold text-slate-800">{{ 0 }}</div>
+                                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Badges</div>
+                                </twig:Card:Content>
+                            </twig:Card>
+                            
+                            <twig:Card class="md:col-span-1">
+                                <twig:Card:Content class="pt-6 text-center">
+                                    <div class="mb-2 mx-auto w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                        <twig:ux:icon name="tabler:trophy" class="w-6 h-6" />
+                                    </div>
+                                    <div class="text-3xl font-bold text-slate-800">{{ 0 }}</div> 
+                                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Trophées</div>
+                                </twig:Card:Content>
+                            </twig:Card>
+
+                            <twig:Card class="md:col-span-1">
+                                <twig:Card:Content class="pt-6 text-center">
+                                    <div class="mb-2 mx-auto w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                                        <twig:ux:icon name="tabler:brain" class="w-6 h-6" />
+                                    </div>
+                                    <div class="text-3xl font-bold text-slate-800">{{ app.user.quizSessions|length }}</div>
+                                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Cours complétés</div>
+                                </twig:Card:Content>
+                            </twig:Card>
+                        </div>
+
+                        {# Carte Informations Personnelles #}
+                        <twig:Card>
+                            <twig:Card:Header>
+                                <twig:Card:Title>Informations Personnelles</twig:Card:Title>
+                                <twig:Card:Description>Gérez vos informations publiques et privées.</twig:Card:Description>
+                            </twig:Card:Header>
+                            <twig:Card:Content>
+                                {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+                                    
+                                    {% for message in app.flashes('success') %}
+                                        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                                            <span class="font-medium">Succès !</span> {{ message }}
+                                        </div>
+                                    {% endfor %}
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div class="space-y-2">
+                                            <twig:Label for="{{ form.name.vars.id }}">{{ form.name.vars.label }}</twig:Label>
+                                            {{ form_widget(form.name, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50', 'placeholder': 'Votre prénom'}}) }}
+                                            <div class="text-[0.8rem] text-muted-foreground">
+                                                {{ form_errors(form.name) }}
+                                            </div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <twig:Label for="{{ form.lastName.vars.id }}">{{ form.lastName.vars.label }}</twig:Label>
+                                            {{ form_widget(form.lastName, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50', 'placeholder': 'Votre nom'}}) }}
+                                            <div class="text-[0.8rem] text-muted-foreground">
+                                                {{ form_errors(form.lastName) }}
+                                            </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="space-y-2">
-                                        <twig:Label for="{{ form.lastName.vars.id }}">{{ form.lastName.vars.label }}</twig:Label>
-                                        {{ form_widget(form.lastName, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50', 'placeholder': 'Votre nom'}}) }}
+                                        <twig:Label for="{{ form.username.vars.id }}">{{ form.username.vars.label }}</twig:Label>
+                                        {{ form_widget(form.username, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                                        <p class="text-xs text-slate-500">C'est le nom qui sera affiché publiquement.</p>
                                         <div class="text-[0.8rem] text-muted-foreground">
-                                            {{ form_errors(form.lastName) }}
+                                            {{ form_errors(form.username) }}
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <div class="space-y-2">
-                                    <twig:Label for="{{ form.username.vars.id }}">{{ form.username.vars.label }}</twig:Label>
-                                    {{ form_widget(form.username, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
-                                    <p class="text-xs text-slate-500">C'est le nom qui sera affiché publiquement.</p>
-                                    <div class="text-[0.8rem] text-muted-foreground">
-                                        {{ form_errors(form.username) }}
+                                    
+                                    <div class="flex justify-end pt-4">
+                                        <twig:Button type="submit">Enregistrer les modifications</twig:Button>
                                     </div>
-                                </div>
-
-                                <div class="space-y-2">
-                                    <twig:Label for="{{ form.email.vars.id }}">{{ form.email.vars.label }}</twig:Label>
-                                    {{ form_widget(form.email, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-slate-50 text-slate-500 px-3 py-2 text-sm ring-offset-background cursor-not-allowed opacity-75', 'disabled': 'disabled'}}) }}
-                                    <p class="text-xs text-slate-500">L'adresse email ne peut pas être modifiée directement.</p>
-                                </div>
-                                
-                                <div class="flex justify-end pt-4">
-                                    <twig:Button type="submit">Enregistrer les modifications</twig:Button>
-                                </div>
-                            {{ form_end(form) }}
-                        </twig:Card:Content>
-                    </twig:Card>
-
-                    {# Carte Statistiques #}
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <twig:Card class="md:col-span-1">
-                            <twig:Card:Content class="pt-6 text-center">
-                                <div class="mb-2 mx-auto w-12 h-12 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600">
-                                    <twig:ux:icon name="tabler:trophy" class="w-6 h-6" />
-                                </div>
-                                <div class="text-3xl font-bold text-slate-800">{{ app.user.lvl ?? 1 }}</div>
-                                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Niveau Actuel</div>
+                                {{ form_end(form) }}
                             </twig:Card:Content>
                         </twig:Card>
-                        
-                         <twig:Card class="md:col-span-1">
-                            <twig:Card:Content class="pt-6 text-center">
-                                <div class="mb-2 mx-auto w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                                    <twig:ux:icon name="tabler:star" class="w-6 h-6" />
-                                </div>
-                                <div class="text-3xl font-bold text-slate-800">{{ 0 }}</div> 
-                                {# XP Placeholder car pas de champ XP dans l'entité #}
-                                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Points d'XP</div>
-                            </twig:Card:Content>
-                        </twig:Card>
-
-                         <twig:Card class="md:col-span-1">
-                            <twig:Card:Content class="pt-6 text-center">
-                                <div class="mb-2 mx-auto w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                                    <twig:ux:icon name="tabler:brain" class="w-6 h-6" />
-                                </div>
-                                <div class="text-3xl font-bold text-slate-800">{{ app.user.quizSessions|length }}</div>
-                                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Quiz Complétés</div>
-                            </twig:Card:Content>
-                        </twig:Card>
-                    </div>
+                    
+                    {% endblock %}
                 </div>
             </div>
         </div>
