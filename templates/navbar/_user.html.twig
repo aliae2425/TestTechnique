@@ -18,18 +18,18 @@
                 <div class="flex-1">
                     <div class="flex justify-between mb-1">
                         <span class="text-xs text-slate-500">XP</span>
-                        <span class="text-xs text-slate-500">{{ app.user.xp ?? 0 }} / {{ app.user.xpNextLevel ?? 100 }}</span>
+                        <span class="text-xs text-slate-500">{{ app.user.xp - app.user.xpForCurrentLevel }} / {{ app.user.xpForNextLevel - app.user.xpForCurrentLevel }}</span>
                     </div>
-                    <div class="w-full bg-slate-300 rounded-full h-2">
+                    <div class="w-full bg-slate-100 rounded-full h-2">
                         <div class="bg-cyan-500 h-2 rounded-full transition-all duration-300"
-                                style="width: {{ ((app.user.xp ?? 0) / (app.user.xpNextLevel ?? 100)) * 100 }}%">
+                                style="width: {{ app.user.levelsProgress }}%">
                         </div>
                     </div>
                 </div>
                 <div class="relative">
                     <div class="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center">
                         <span class="text-cyan-700 font-bold text-lg">
-                            {{ app.user.level ?? 1 }}
+                            {{ app.user.lvl ?? 1 }}
                         </span>
                     </div>
                 </div>

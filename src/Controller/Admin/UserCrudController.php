@@ -40,7 +40,8 @@ class UserCrudController extends AbstractCrudController
         yield TextField::new('username', 'Nom d\'utilisateur');
         yield TextField::new('name', 'Prénom');
         yield TextField::new('lastName', 'Nom de famille');
-        yield IntegerField::new('lvl', 'Niveau');
+        yield IntegerField::new('lvl', 'Niveau')
+            ->setFormTypeOption('disabled', 'disabled');
         yield IntegerField::new('xp', 'XP');
         
         yield FormField::addTab('Resultats Quiz');

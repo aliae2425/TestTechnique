@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\Expr\Func;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -15,6 +16,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
+    private const XP_PER_LEVEL = 100;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -54,15 +58,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastName = null;
 
     #[ORM\Column]
-    private ?int $lvl = null;
-
-    #[ORM\Column]
     private ?int $xp = null;
 
     public function __construct()
     {
         $this->quizSessions = new ArrayCollection();
-        $this->lvl = 1; // Default level set to 1
         $this->xp = 0; // Default XP set to 0
     }
 
@@ -219,16 +219,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLvl(): ?int
+    public function GetLvlConst()
     {
-        return $this->lvl;
+        return self::XP_PER_LEVEL;    
     }
 
-    public function setLvl(int $lvl): static
+    public function getLvl(): ?int
     {
-        $this->lvl = $lvl;
+        return (int) (sqrt($this->xp / self::XP_PER_LEVEL) + 1);
+    }
 
-        return $this;
+
+    public function getXpForCurrentLevel(): int
+    {
+         $lvl = $this->getLvl();
+         return self::XP_PER_LEVEL * (($lvl - 1) ** 2);
+    }
+
+    public function getXpForNextLevel(): int
+    {
+         $lvl = $this->getLvl();
+         return self::XP_PER_LEVEL * ($lvl ** 2);
+    }
+
+    public function getLevelsProgress(): int
+    {
+        $currentLvlXp = $this->xp - $this->getXpForCurrentLevel();
+        $lvlRange = $this->getXpForNextLevel() - $this->getXpForCurrentLevel();
+        
+        if ($lvlRange <= 0) return 100;
+
+        return (int) (($currentLvlXp / $lvlRange) * 100);
     }
 
     public function getXp(): ?int
@@ -243,16 +264,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Calcule l'XP nécessaire pour atteindre le prochain niveau.
-     * Exemple de formule : Le niveau N demande (N * 100) XP de plus que le précédent.
-     * Ou plus simple pour commencer : Seuil = Niveau * 100.
-     */
-    public function getXpNextLevel(): int
+    public function addXP(int $amount): static
     {
-        // Formule simple : 100 XP par niveau pour l'instant
-        // Niv 1 -> Objectif 100
-        // Niv 2 -> Objectif 200 (Total XP)
-        return $this->lvl * 100;
+        $this->xp += $amount;
+
+        return $this;
     }
+
 }

@@ -3,12 +3,12 @@
 {% block title %}Mon Profil - 418Academy{% endblock %}
 
 {% block body %}
-    <div class="min-h-screen bg-slate-50/50 mt-[72px]">
+    <div class="min-h-screen bg-slate-50/50 ">
         {# Header / Banner #}
-        <div class="relative h-64 bg-slate-200 overflow-hidden">
+        <div class="relative h-100 bg-slate-200 overflow-hidden">
              {# Fond abstrait ou image #}
-            <div class="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 opacity-90"></div>
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+            <img src="{{ asset('images/profile_banner.jpg') }}" class="absolute inset-0 w-full h-full object-cover" alt="Banner">
+            <div class="absolute inset-0 bg-black/20"></div>
             
             <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-slate-900/50 to-transparent">
                 <div class="max-w-7xl mx-auto flex items-end gap-6">
