@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Question;
 use App\Entity\QuizTemplate;
 use App\Form\QuestionType;
+use App\Form\QuizRuleType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -42,14 +43,19 @@ class QuizTemplateCrudController extends AbstractCrudController
             ->setHelp('Laisser vide pour illimité');
             
         yield FormField::addTab("Règles");
+        yield CollectionField::new('Rules', 'Règles')
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryType(QuizRuleType::class)
+            ->setFormTypeOption('by_reference', false)
+            ->hideOnIndex();
 
         yield FormField::addTab("Questions");
-        
-        // yield CollectionField::new('Questions', 'Questions du Quiz')
-        //     ->allowAdd(true)
-        //     ->allowDelete(true)
-        //     ->setEntryType(QuestionType::class)
-        //     ->setFormTypeOption('by_reference', false)
-        //     ->hideOnIndex();
+        yield CollectionField::new('Questions', 'Questions du Quiz')
+             ->allowAdd(true)
+             ->allowDelete(true)
+             ->setEntryType(QuestionType::class)
+             ->setFormTypeOption('by_reference', false)
+             ->hideOnIndex();
     }
 }

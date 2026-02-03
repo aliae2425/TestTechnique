@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\QuizTemplateRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuizTemplateRepository::class)]
@@ -25,8 +27,20 @@ class QuizTemplate
     #[ORM\Column(nullable: true)]
     private ?int $timeLimit = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Rules')]
-    private ?QuizRule $Rules = null;
+    #[ORM\ManyToMany(targetEntity: QuizRule::class, inversedBy: 'templates', cascade: ['persist'])]
+    private Collection $Rules;
+
+    /**
+     * @var Collection<int, Question>
+     */
+    #[ORM\ManyToMany(targetEntity: Question::class)]
+    private Collection $Questions;
+
+    public function __construct()
+    {
+        $this->Rules = new ArrayCollection();
+        $this->Questions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,14 +95,50 @@ class QuizTemplate
         return $this;
     }
 
-    public function getRules(): ?QuizRule
+    /**
+     * @return Collection<int, QuizRule>
+     */
+    public function getRules(): Collection
     {
         return $this->Rules;
     }
 
-    public function setRules(?QuizRule $Rules): static
+    public function addRule(QuizRule $rule): static
     {
-        $this->Rules = $Rules;
+        if (!$this->Rules->contains($rule)) {
+            $this->Rules->add($rule);
+        }
+
+        return $this;
+    }
+
+    public function removeRule(QuizRule $rule): static
+    {
+        $this->Rules->removeElement($rule);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Question>
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->Questions;
+    }
+
+    public function addQuestion(Question $question): static
+    {
+        if (!$this->Questions->contains($question)) {
+            $this->Questions->add($question);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): static
+    {
+        $this->Questions->removeElement($question);
 
         return $this;
     }

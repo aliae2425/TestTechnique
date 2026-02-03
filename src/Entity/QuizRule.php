@@ -27,12 +27,12 @@ class QuizRule
     /**
      * @var Collection<int, QuizTemplate>
      */
-    #[ORM\OneToMany(targetEntity: QuizTemplate::class, mappedBy: 'Rules')]
-    private Collection $Rules;
+    #[ORM\ManyToMany(targetEntity: QuizTemplate::class, mappedBy: 'Rules')]
+    private Collection $templates;
 
     public function __construct()
     {
-        $this->Rules = new ArrayCollection();
+        $this->templates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -84,28 +84,25 @@ class QuizRule
     /**
      * @return Collection<int, QuizTemplate>
      */
-    public function getRules(): Collection
+    public function getTemplates(): Collection
     {
-        return $this->Rules;
+        return $this->templates;
     }
 
-    public function addRule(QuizTemplate $rule): static
+    public function addTemplate(QuizTemplate $template): static
     {
-        if (!$this->Rules->contains($rule)) {
-            $this->Rules->add($rule);
-            $rule->setRules($this);
+        if (!$this->templates->contains($template)) {
+            $this->templates->add($template);
+            $template->addRule($this);
         }
 
         return $this;
     }
 
-    public function removeRule(QuizTemplate $rule): static
+    public function removeTemplate(QuizTemplate $template): static
     {
-        if ($this->Rules->removeElement($rule)) {
-            // set the owning side to null (unless already changed)
-            if ($rule->getRules() === $this) {
-                $rule->setRules(null);
-            }
+        if ($this->templates->removeElement($template)) {
+            $template->removeRule($this);
         }
 
         return $this;
