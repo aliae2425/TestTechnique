@@ -3,13 +3,20 @@
 {% block title %}Formations{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
-        <h1 class="mb-4">Nos Formations</h1>
-        <p>
-            Bienvenue sur la page des formations. Ici, vous trouverez prochainement toutes les informations concernant les différentes formations proposées sur notre site.
-        </p>
-        <div class="alert alert-info mt-4" role="alert">
-            Cette section est en cours de construction. Revenez bientôt pour découvrir notre offre de formations !
+    <div class="min-h-screen bg-slate-50/50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 max-w-2xl w-full p-8 flex items-center gap-8">
+            <div class="flex-1">
+                <h1 class="text-2xl font-bold text-slate-900 mb-4">Nos Formations</h1>
+                <p class="text-slate-600 mb-6">
+                    Bienvenue sur la page des Formations. Ici, vous trouverez prochainement toutes les informations concernant les différentes formations proposées sur notre site.
+                </p>
+                <div class="bg-sky-50 text-sky-700 px-4 py-3 rounded-lg border border-sky-100 text-sm font-medium">
+                    Cette section est en cours de construction. Revenez bientôt pour découvrir notre offre de formations !
+                </div>
+            </div>
+            <div class="flex-shrink-0 text-slate-300">
+                <twig:ux:icon name="tabler:paint" class="w-24 h-24" />
+            </div>
         </div>
     </div>
 {% endblock %}
