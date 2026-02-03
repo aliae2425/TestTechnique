@@ -16,10 +16,57 @@ class QuestionRepository extends ServiceEntityRepository
         parent::__construct($registry, Question::class);
     }
 
-    //    /**
-    //     * @return Question[] Returns an array of Question objects
-    //     */
-    //    public function findByExampleField($value): array
+    /**
+     * @return Question[]
+     */
+    public function findRandomQuestions(int $limit): array
+    {
+        $ids = $this->createQueryBuilder('q')
+             ->select('q.id')
+             ->getQuery()
+             ->getSingleColumnResult();
+             
+        if (empty($ids)) {
+            return [];
+        }
+
+        shuffle($ids);
+        $selectedIds = array_slice($ids, 0, $limit);
+         
+        return $this->createQueryBuilder('q')
+             ->where('q.id IN (:ids)')
+             ->setParameter('ids', $selectedIds)
+             ->getQuery()
+             ->getResult();
+    }
+
+    /**
+     * @return Question[]
+     */
+    public function findByRule(string $theme, string $level, int $limit): array
+    {
+         $ids = $this->createQueryBuilder('q')
+             ->select('q.id')
+             ->where('q.type = :theme')
+             ->andWhere('q.level = :level')
+             ->setParameter('theme', $theme)
+             ->setParameter('level', $level)
+             ->getQuery()
+             ->getSingleColumnResult();
+         
+        if (empty($ids)) {
+            return [];
+        }
+
+        shuffle($ids);
+        $selectedIds = array_slice($ids, 0, $limit);
+         
+        return $this->createQueryBuilder('q')
+             ->where('q.id IN (:ids)')
+             ->setParameter('ids', $selectedIds)
+             ->getQuery()
+             ->getResult();
+    }
     //    {
     //        return $this->createQueryBuilder('q')
     //            ->andWhere('q.exampleField = :val')
