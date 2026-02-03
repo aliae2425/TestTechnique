@@ -21,6 +21,9 @@ class QuizSession
     #[ORM\OneToOne(inversedBy: 'quizSession', cascade: ['persist', 'remove'])]
     private ?Invitation $invitation = null;
 
+    #[ORM\ManyToOne]
+    private ?QuizTemplate $quizTemplate = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $startAt = null;
 
@@ -63,6 +66,18 @@ class QuizSession
     public function setInvitation(?Invitation $invitation): static
     {
         $this->invitation = $invitation;
+
+        return $this;
+    }
+
+    public function getQuizTemplate(): ?QuizTemplate
+    {
+        return $this->quizTemplate;
+    }
+
+    public function setQuizTemplate(?QuizTemplate $quizTemplate): static
+    {
+        $this->quizTemplate = $quizTemplate;
 
         return $this;
     }

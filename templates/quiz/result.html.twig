@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultats - {{ quiz.Titre }}{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-50 pt-24 pb-12">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <div class="bg-white rounded-2xl shadow-xl p-8 border border-slate-100 text-center mb-8">
+            <h1 class="text-3xl font-bold text-slate-800 mb-4">Résultats</h1>
+            <p class="text-xl text-slate-600 mb-6">Quiz : <span class="font-semibold">{{ quiz.Titre }}</span></p>
+            
+            <div class="inline-flex items-center justify-center w-32 h-32 rounded-full border-4 {{ score == total ? 'border-green-500 text-green-600' : (score > total / 2 ? 'border-yellow-500 text-yellow-600' : 'border-red-500 text-red-600') }} mb-6">
+                <div class="text-center">
+                    <span class="block text-3xl font-bold">{{ score }}</span>
+                    <span class="block text-sm font-medium text-slate-400">sur {{ total }}</span>
+                </div>
+            </div>
+            
+            <p class="text-slate-500">
+                Vous avez correctement répondu à {{ score }} questions sur {{ total }} traitées.
+            </p>
+            
+            <div class="mt-8">
+                <a href="{{ path('app_quiz_start', {id: quiz.id}) }}" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium">Recommencer</a>
+            </div>
+        </div>
+        
+        <h2 class="text-2xl font-bold text-slate-800 mb-6">Détails des réponses</h2>
+        
+        <div class="space-y-6">
+            {% for result in results %}
+                <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 {{ result.isCorrect ? 'border-green-500' : 'border-red-500' }}">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-slate-800">{{ result.question.titled }}</h3>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase {{ result.isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                            {{ result.isCorrect ? 'Correct' : 'Incorrect' }}
+                        </span>
+                    </div>
+                    
+                    {% if result.question.image %}
+                         <div class="mb-4 rounded-lg overflow-hidden w-48">
+                            <img src="{{ asset('uploads/images/questions/' ~ result.question.image) }}" alt="Image question" class="w-full h-auto object-cover">
+                        </div>
+                    {% endif %}
+                    
+                    <div class="space-y-2">
+                         {% for answer in result.question.Reponses %}
+                             {% set isSelected = answer.id in result.selectedIds %}
+                             {% set isCorrect = answer.id in result.correctIds %}
+                             
+                             <div class="flex items-center justify-between p-3 rounded-lg border {{ isSelected ? (isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200') : (isCorrect ? 'bg-green-50 border-green-200 border-dashed' : 'border-slate-100') }}">
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 flex items-center justify-center mr-3">
+                                        {% if isSelected %}
+                                            {% if isCorrect %}
+                                                <span class="text-green-600">✓</span>
+                                            {% else %}
+                                                <span class="text-red-500">✗</span>
+                                            {% endif %}
+                                        {% elseif isCorrect %}
+                                            <span class="text-green-400">●</span>
+                                        {% else %}
+                                            <span class="text-slate-300">○</span>
+                                        {% endif %}
+                                    </div>
+                                    <span class="{{ isSelected ? 'font-medium' : 'text-slate-600' }} {{ isCorrect ? 'text-green-700' : '' }}">
+                                        {{ answer.text }}
+                                    </span>
+                                </div>
+                                
+                                {% if answer.feedback and (isSelected or isCorrect) %}
+                                    <span class="text-xs text-slate-500 italic max-w-xs text-right">{{ answer.feedback }}</span>
+                                {% endif %}
+                             </div>
+                         {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
