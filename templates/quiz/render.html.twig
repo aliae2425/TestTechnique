@@ -48,7 +48,7 @@
                                             <div class="flex items-center h-5">
                                                 {# Use checkbox for multiple correct answers logic, simplified here as radio for single choice feeling, or adjust based on logic. 
                                                    Can be enhanced later to detect single/multiple mode. Defaults to checkbox for flexibility. #}
-                                                <input type="checkbox" name="q_{{ question.id }}[]" value="{{ answer.id }}" class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                                                <input type="radio" name="q_{{ question.id }}[]" value="{{ answer.id }}" class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
                                             </div>
                                             <div class="ml-3 text-sm">
                                                 <span class="font-medium text-slate-700 group-hover:text-indigo-700">{{ answer.text }}</span>
