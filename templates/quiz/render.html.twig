@@ -44,7 +44,7 @@
                             {% for question in questions %}
                                 <div class="hidden h-full flex flex-col animate-in fade-in slide-in-from-right-4 duration-300" 
                                      data-quiz-target="question" 
-                                     id="q_{{ question.id }}">
+                                     id="q_{{ question.id }}">  
                                     
                                     {# CONTENT CARD #}
                                     <div class="p-6 md:p-8 flex flex-col md:flex-row gap-8">
@@ -71,34 +71,30 @@
                                             {# Answers in a grid #}
                                             <div class="grid gap-3">
                                                 {% for answer in question.Reponses %}
-                                                    <label class="relative flex items-center p-4 rounded-xl border-2 border-transparent bg-white hover:bg-slate-50 transition-all cursor-pointer shadow-sm group ring-1 ring-slate-200">
-                                                        <input type="checkbox" 
-                                                            name="q_{{ question.id }}[]" 
-                                                            value="{{ answer.id }}"
-                                                            data-action="change->quiz#validate"
-                                                            data-is-correct="{{ answer.isCorrect ? 'true' : 'false' }}"
-                                                            class="w-5 h-5 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500 bg-white">
+                                                    <label class="relative flex items-start p-4 rounded-xl border-2 border-transparent bg-white hover:bg-slate-50 transition-all cursor-pointer shadow-sm group ring-1 ring-slate-200">
+                                                        <div class="flex items-center h-5">
+                                                            <input type="radio" 
+                                                                name="q_{{ question.id }}[]" 
+                                                                value="{{ answer.id }}"
+                                                                data-action="change->quiz#validate"
+                                                                data-is-correct="{{ answer.isCorrect ? 'true' : 'false' }}"
+                                                                class="w-5 h-5 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500 bg-white mt-0.5">
+                                                        </div>
                                                         
-                                                        <span class="ml-4 text-base font-medium text-slate-700 group-hover:text-slate-900 select-none flex-1">
-                                                            {{ answer.text }}
-                                                        </span>
+                                                        <div class="ml-4 flex-1">
+                                                            <span class="text-base font-medium text-slate-700 group-hover:text-slate-900 select-none block">
+                                                                {{ answer.text }}
+                                                            </span>
+
+                                                            {% if not isExam and answer.feedback %}
+                                                                <div class="hidden mt-2 text-sm font-medium opacity-90" data-quiz-target="feedback">
+                                                                    {{ answer.feedback }}
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
                                                     </label>
                                                 {% endfor %}
                                             </div>
-
-                                            {# Training Feedback - Scrolls internally if long #}
-                                            {% if not isExam %}
-                                                <div class="mt-4 hidden animate-in fade-in slide-in-from-top-2 duration-300 overflow-y-auto max-h-48" data-quiz-target="feedback">
-                                                    {% for answer in question.Reponses %}
-                                                        {% if answer.feedback %}
-                                                            <div class="mt-2 p-3 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-800 text-sm flex items-start">
-                                                                <span class="mr-2 text-xl font-bold">💡</span>
-                                                                <p><span class="font-semibold block mb-1">À propos de "{{ answer.text }}" :</span> {{ answer.feedback }}</p>
-                                                            </div>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </div>
-                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>

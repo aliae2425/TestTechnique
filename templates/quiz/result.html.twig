@@ -4,31 +4,40 @@
 
 {% block body %}
 <div class="min-h-screen bg-slate-50 pt-24 pb-12">
-    <div class="container mx-auto px-4 max-w-4xl">
-        <div class="bg-white rounded-2xl shadow-xl p-8 border border-slate-100 text-center mb-8">
-            <h1 class="text-3xl font-bold text-slate-800 mb-4">Résultats</h1>
-            <p class="text-xl text-slate-600 mb-6">Quiz : <span class="font-semibold">{{ quiz.Titre }}</span></p>
-            
-            <div class="inline-flex items-center justify-center w-32 h-32 rounded-full border-4 {{ score == total ? 'border-green-500 text-green-600' : (score > total / 2 ? 'border-yellow-500 text-yellow-600' : 'border-red-500 text-red-600') }} mb-6">
-                <div class="text-center">
-                    <span class="block text-3xl font-bold">{{ score }}</span>
-                    <span class="block text-sm font-medium text-slate-400">sur {{ total }}</span>
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row gap-8">
+        
+        {# Left Sidebar - Fixed Summary #}
+        <div class="w-full md:w-80 shrink-0">
+            <div class="md:sticky md:top-24">
+                <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100 text-center">
+                    <h1 class="text-2xl font-bold text-slate-800 mb-2">Résultats</h1>
+                    <p class="text-base text-slate-600 mb-6">Quiz : <span class="font-semibold">{{ quiz.Titre }}</span></p>
+                    
+                    <div class="inline-flex items-center justify-center w-32 h-32 rounded-full border-4 {{ score == total ? 'border-green-500 text-green-600' : (score > total / 2 ? 'border-yellow-500 text-yellow-600' : 'border-red-500 text-red-600') }} mb-6">
+                        <div class="text-center">
+                            <span class="block text-3xl font-bold">{{ score }}</span>
+                            <span class="block text-sm font-medium text-slate-400">sur {{ total }}</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-slate-500 text-sm mb-6">
+                        Vous avez correctement répondu à {{ score }} questions sur {{ total }} traitées.
+                    </p>
+                    
+                    <div class="flex flex-col gap-3">
+                        <a href="{{ path('app_quiz_start', {id: quiz.id}) }}" class="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm">Recommencer</a>
+                        <a href="{{ path('home_index')}}" class="w-full px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors font-medium text-sm">Retour Accueil</a>
+                    </div>
                 </div>
-            </div>
-            
-            <p class="text-slate-500">
-                Vous avez correctement répondu à {{ score }} questions sur {{ total }} traitées.
-            </p>
-            
-            <div class="mt-8">
-                <a href="{{ path('app_quiz_start', {id: quiz.id}) }}" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium">Recommencer</a>
             </div>
         </div>
         
-        <h2 class="text-2xl font-bold text-slate-800 mb-6">Détails des réponses</h2>
-        
-        <div class="space-y-6">
-            {% for result in results %}
+        {# Right Content - Details #}
+        <div class="flex-1 min-w-0">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">Détails des réponses</h2>
+            
+            <div class="space-y-6">
+                {% for result in results %}
                 <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 {{ result.isCorrect ? 'border-green-500' : 'border-red-500' }}">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-lg font-semibold text-slate-800">{{ result.question.titled }}</h3>
@@ -76,6 +85,7 @@
                     </div>
                 </div>
             {% endfor %}
+            </div>
         </div>
     </div>
 </div>

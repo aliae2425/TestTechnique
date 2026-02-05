@@ -88,13 +88,27 @@ export default class extends Controller {
         } else {
             // Training Mode
             this.handleTrainingValidation(questionContainer, questionId, cell);
+            
+            // Lock inputs for this question to prevent changing answer
+            const inputs = questionContainer.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+            inputs.forEach(inp => {
+                // Prevent further changes without disabling (so POST data remains)
+                inp.addEventListener('click', (e) => e.preventDefault());
+                inp.closest('label').classList.add('cursor-not-allowed', 'opacity-75');
+            });
         }
     }
 
     handleTrainingValidation(container, questionId, cell) {
-        // Find all inputs for this question
-        const inputs = container.querySelectorAll('input[type="checkbox"]');
+        // Find all inputs for this question (support both checkbox and radio)
+        const inputs = container.querySelectorAll('input[type="checkbox"], input[type="radio"]');
         const feedbackBlocks = container.querySelectorAll('[data-quiz-target="feedback"]');
+
+        // Reset all feedback blocks to hidden initially and remove color classes
+        feedbackBlocks.forEach(fb => {
+            fb.classList.add('hidden');
+            fb.classList.remove('text-red-600', 'bg-red-50', 'border-red-100', 'text-emerald-600', 'bg-emerald-50', 'border-emerald-100');
+        });
         
         let allCorrect = true;     // Flag: Did user make ANY mistake?
         let userHasSelectedAllCorrect = true; // Flag: Did user find ALL correct answers?
@@ -102,22 +116,48 @@ export default class extends Controller {
 
         // 1. Check user selections
         inputs.forEach(input => {
-            const isCorrect = input.dataset.isCorrect === "true";
             const label = input.closest('label');
-            
-            // Reset basic classes
-            label.classList.remove('bg-emerald-100', 'border-emerald-500', 'bg-rose-100', 'border-rose-500', 'text-emerald-800', 'text-rose-800');
+            // Clean up potentially conflicting classes from previous runs
+            label.classList.remove(
+                'bg-emerald-50', 'bg-emerald-100', 'border-emerald-500', 'ring-emerald-500', 'text-emerald-800', 'text-emerald-900',
+                'bg-rose-50', 'bg-rose-100', 'border-rose-500', 'ring-rose-500', 'text-rose-800', 'text-rose-900',
+                'ring-2'
+            );
             
             if (input.checked) {
                 anySelected = true;
-                if (isCorrect) {
-                     label.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
-                } else {
-                     label.classList.add('bg-rose-100', 'border-rose-500', 'text-rose-800');
-                     allCorrect = false;
+                if (input.dataset.isCorrect !== "true") {
+                    allCorrect = false;
                 }
             }
         });
+
+        // Show feedback if any answer is selected
+        if (anySelected) {
+             inputs.forEach(input => {
+                 const isCorrect = input.dataset.isCorrect === "true";
+                 const label = input.closest('label');
+                 const feedback = label.querySelector('[data-quiz-target="feedback"]');
+                 
+                 // Reset base ring/bg classes first to ensure clean state
+                 label.classList.remove('ring-1', 'ring-slate-200', 'hover:bg-slate-50', 'bg-white');
+
+                 // Apply Label Color for Correct OR Wrong-but-Selected
+                 if (isCorrect) {
+                     // GREEN: Correct Answer
+                     label.classList.add('bg-emerald-50', 'ring-2', 'ring-emerald-500', 'text-emerald-900');
+                     if (feedback) feedback.classList.remove('hidden');
+                 } 
+                 else if (input.checked) {
+                     // RED: Wrong Choice
+                     label.classList.add('bg-rose-50', 'ring-2', 'ring-rose-500', 'text-rose-900');
+                     if (feedback) feedback.classList.remove('hidden');
+                 } else {
+                     // Default unused state (fix for non-selected wrong answers staying "white")
+                     label.classList.add('bg-white', 'ring-1', 'ring-slate-200');
+                 }
+             });
+        }
 
         // 2. Check if all correct answers are found
         const totalCorrectAnswers = container.querySelectorAll('input[data-is-correct="true"]').length;
@@ -127,30 +167,24 @@ export default class extends Controller {
             userHasSelectedAllCorrect = false;
         }
 
-        // Determine Cell Color & Feedback Visibility
+        // Determine Cell Color
         cell.classList.remove('bg-slate-200', 'bg-emerald-500', 'bg-rose-500', 'bg-amber-400', 'shadow-[0_0_10px_rgba(244,63,94,0.6)]', 'shadow-[0_0_10px_rgba(52,211,153,0.6)]');
         
         if (!anySelected) {
             cell.classList.add('bg-slate-200'); 
-            feedbackBlocks.forEach(fb => fb.classList.add('hidden'));
             return;
         }
 
-        // Logic for feedback display:
-        // Show feedback if user made a mistake OR if user found everything.
-        // Don't show if partially correct but no mistakes (unless you want to guide them).
-        
+
         if (allCorrect && userHasSelectedAllCorrect) {
             // PERFECT
             cell.classList.add('bg-emerald-500', 'shadow-[0_0_10px_rgba(52,211,153,0.6)]');
-            feedbackBlocks.forEach(fb => fb.classList.remove('hidden'));
         } 
         else if (!allCorrect) {
             // MISTAKE MADE
             cell.classList.add('bg-rose-500', 'shadow-[0_0_10px_rgba(244,63,94,0.6)]');
-            feedbackBlocks.forEach(fb => fb.classList.remove('hidden'));
             
-            // Reveal missed correct answers
+            // Reveal missed correct answers (Visual Hint)
             inputs.forEach(input => {
                  if (input.dataset.isCorrect === "true" && !input.checked) {
                      input.closest('label').classList.add('border-emerald-400', 'border-dashed', 'bg-emerald-50/50');
@@ -158,10 +192,8 @@ export default class extends Controller {
             });
         } 
         else {
-            // PARTIAL (Correct so far, but missing some)
+            // PARTIAL
             cell.classList.add('bg-amber-400');
-            // Hide feedback until finished? Or show hint? Let's hide to encourage finding the rest.
-            feedbackBlocks.forEach(fb => fb.classList.add('hidden')); 
         }
     }
 }
