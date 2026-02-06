@@ -49,6 +49,12 @@ class UserReponses
         return $this->Question;
     }
 
+    public function __toString(): string
+    {
+        return $this->Question->getTitled() . ' : ' . ($this->Reponse ? $this->Reponse->getText() : 'No Answer');
+    }
+
+
     public function setQuestion(?Question $Question): static
     {
         $this->Question = $Question;

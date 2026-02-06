@@ -7,6 +7,7 @@ use App\Entity\QuizSession;
 use App\Entity\QuizTemplate;
 use App\Entity\UserReponses;
 use App\Repository\QuestionRepository;
+use App\Repository\QuizSessionRepository;
 use App\Repository\QuizTemplateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +29,7 @@ final class QuizController extends AbstractController
     }
 
     #[Route('/quiz/start/{id}', name: 'app_quiz_start', methods: ['GET', 'POST'])]
-    public function startQuiz(int $id, Request $request, QuizTemplateRepository $quizTemplateRepository, QuestionRepository $questionRepository, EntityManagerInterface $entityManager): Response
+    public function startQuiz(int $id, Request $request, QuizTemplateRepository $quizTemplateRepository, QuestionRepository $questionRepository, QuizSessionRepository $quizSessionRepository, EntityManagerInterface $entityManager): Response
     {
         $template = $quizTemplateRepository->find($id);
 
@@ -37,23 +38,35 @@ final class QuizController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            return $this->handleQuizSubmission($request, $template, $questionRepository, $entityManager);
+            return $this->handleQuizSubmission($request, $template, $questionRepository, $quizSessionRepository, $entityManager);
         }
+
+        // Initialize Session on Start (GET) to track duration
+        $session = $this->createQuizSession($template);
+        $entityManager->persist($session);
+        $entityManager->flush();
 
         $questions = $this->getQuizQuestions($template, $questionRepository);
 
         return $this->render('quiz/render.html.twig', [
             'quiz' => $template,
             'questions' => $questions,
+            'quizSession' => $session,
         ]);
     }
 
-    private function handleQuizSubmission(Request $request, QuizTemplate $template, QuestionRepository $questionRepository, EntityManagerInterface $entityManager): Response
+    private function handleQuizSubmission(Request $request, QuizTemplate $template, QuestionRepository $questionRepository, QuizSessionRepository $quizSessionRepository, EntityManagerInterface $entityManager): Response
     {
         $score = 0;
         $results = [];
 
-        $session = $this->createQuizSession($template);
+        // Try to retrieve existing session or create fallback
+        $sessionId = $request->request->get('session_id');
+        $session = $sessionId ? $quizSessionRepository->find($sessionId) : null;
+
+        if (!$session) {
+            $session = $this->createQuizSession($template);
+        }
 
         foreach ($request->request->all() as $key => $value) {
             if (str_starts_with($key, 'q_')) {
@@ -73,6 +86,7 @@ final class QuizController extends AbstractController
         }
 
         $session->setFinalScore($score);
+        $session->setEndAt(new \DateTimeImmutable());
         $entityManager->persist($session);
         $entityManager->flush();
         

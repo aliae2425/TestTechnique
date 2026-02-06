@@ -27,7 +27,10 @@ class QuizSession
     #[ORM\Column]
     private ?\DateTimeImmutable $startAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $endAt = null;
+
+    #[ORM\Column(nullable: true)]
     private ?float $finalScore = null;
 
     /**
@@ -94,9 +97,42 @@ class QuizSession
         return $this;
     }
 
+    public function getEndAt(): ?\DateTimeImmutable
+    {
+        return $this->endAt;
+    }
+
+    public function setEndAt(?\DateTimeImmutable $endAt): static
+    {
+        $this->endAt = $endAt;
+
+        return $this;
+    }
+
     public function getFinalScore(): ?float
     {
         return $this->finalScore;
+    }
+
+    public function getParticipantName(): string
+    {
+        if ($this->getUser()) {
+             // Assuming User has generic identifiers, using email or default string repr
+             return (string) $this->getUser()->getUserIdentifier(); 
+        }
+        if ($this->getInvitation()) {
+            return "Invitation";
+        }
+        return "Anonyme";
+    }
+
+    public function getDurationString(): string
+    {
+        if (!$this->startAt || !$this->endAt) {
+            return 'En cours / Inconnu';
+        }
+        $diff = $this->startAt->diff($this->endAt);
+        return $diff->format('%H h %I min %S s');
     }
 
     public function setFinalScore(float $finalScore): static

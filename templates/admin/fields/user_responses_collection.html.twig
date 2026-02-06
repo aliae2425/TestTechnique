@@ -1,0 +1,34 @@
+<div class="datagrid">
+    <table class="table datagrid-table">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Réponse Sélectionnée</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for userResponse in field.value %}
+             <tr>
+                <td style="white-space: normal;">
+                    <strong>{{ userResponse.Question.titled }}</strong>
+                </td>
+                <td style="white-space: normal;">
+                    {{ userResponse.Reponse ? userResponse.Reponse.text : 'Aucune réponse' }}
+                </td>
+                <td>
+                    {% if userResponse.Reponse and userResponse.Reponse.isCorrect %}
+                        <span class="badge badge-success" style="background-color: var(--green-500);">Correct</span>
+                    {% else %}
+                        <span class="badge badge-danger" style="background-color: var(--red-500);">Incorrect</span>
+                    {% endif %}
+                </td>
+             </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucune réponse enregistrée.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

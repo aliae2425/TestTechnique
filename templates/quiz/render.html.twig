@@ -38,6 +38,7 @@
 
                  <twig:Card:Content>
                     <form action="{{ path('app_quiz_start', {id: quiz.id}) }}" method="POST" data-turbo="false">
+                        <input type="hidden" name="session_id" value="{{ quizSession.id }}">
                         
                         {# Questions Container #}
                         <div class="flex-1 overflow-y-auto no-scrollbar pr-2 relative">
