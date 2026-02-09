@@ -25,14 +25,19 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id')->hideOnForm();
+        yield TextField::new('primaryRole', 'Type de compte')
+            ->setFormTypeOption('disabled', 'disabled')
+            ->setLabel('Type de compte');
 
         yield FormField::addTab('Utilisateur');
         yield EmailField::new('email', 'Email');
         yield ChoiceField::new('roles', 'Rôles')
             ->setChoices([
                 'Utilisateur' => 'ROLE_USER',
+                'Entreprise' => 'ROLE_ENTREPRISEz',
                 'Administrateur' => 'ROLE_ADMIN',
             ])
+            ->hideOnIndex()
             ->allowMultipleChoices();
         yield BooleanField::new('isVerified', 'Vérifié');
 

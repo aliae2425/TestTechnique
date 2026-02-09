@@ -14,7 +14,7 @@
                 <twig:Card class="w-full">
                     <twig:Card:Header>
                         <twig:Card:Title class="text-2xl font-bold">Inscription</twig:Card:Title>
-                        <twig:Card:Description>Créez votre compte pour commencer.</twig:Card:Description>
+                        <twig:Card:Description>Créez votre compte entreprises pour commencer.</twig:Card:Description>
                     </twig:Card:Header>
                     <twig:Card:Content>
                         {{ form_start(registrationForm, {'attr': {'class': 'space-y-4'}}) }}
@@ -61,7 +61,7 @@
                     </twig:Card:Footer>
                 </twig:Card>
 
-                <a href="#" class="mt-6 inline-block text-center text-sm text-muted-foreground hover:text-primary w-full">Vous êtes un recruteur ? Accédez à notre espace entreprises.</a>
+                <a href="{{ path('app_register') }}" class="mt-6 inline-block text-center text-sm text-muted-foreground hover:text-primary w-full">Retour à l'inscription standard</a>
             </div>
         </div>
 
