@@ -19,10 +19,10 @@ class Question
     #[ORM\Column(length: 255)]
     private ?string $titled = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $level = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -40,6 +40,9 @@ class Question
     public function __construct()
     {
         $this->Reponses = new ArrayCollection();
+        for ($i = 0; $i < 4; $i++) {
+            $this->addReponse(new Answer());
+        }
     }
 
     public function getId(): ?int

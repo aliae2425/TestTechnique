@@ -33,7 +33,7 @@ class QuizTemplate
     /**
      * @var Collection<int, Question>
      */
-    #[ORM\ManyToMany(targetEntity: Question::class)]
+    #[ORM\ManyToMany(targetEntity: Question::class, cascade: ['persist'])]
     private Collection $Questions;
 
     public function __construct()
