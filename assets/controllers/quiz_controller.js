@@ -1,14 +1,61 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ["container", "cell", "question", "feedback", "prevButton", "nextButton", "submitButton"];
+    static targets = ["container", "cell", "question", "feedback", "prevButton", "nextButton", "submitButton", "timer"];
     static values = {
-        mode: String // 'training' or 'Exam'
+        mode: String, // 'training' or 'Exam'
+        timeLimit: Number
     }
 
     connect() {
         this.currentIndex = 0;
         this.showQuestion(0);
+        
+        if (this.hasTimeLimitValue && this.timeLimitValue > 0) {
+            this.startTimer(this.timeLimitValue);
+        }
+    }
+
+    startTimer(seconds) {
+        this.updateTimerDisplay(seconds);
+        
+        this.timerInterval = setInterval(() => {
+            seconds--;
+            this.updateTimerDisplay(seconds);
+            
+            if (seconds <= 0) {
+                clearInterval(this.timerInterval);
+                this.forceSubmit();
+            }
+            // Warning style when less than 1 minute
+            if (seconds <= 60 && this.hasTimerTarget) {
+                this.timerTarget.classList.add('text-red-600', 'animate-pulse', 'font-bold');
+            }
+        }, 1000);
+    }
+
+    updateTimerDisplay(seconds) {
+        if (!this.hasTimerTarget) return;
+        
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        this.timerTarget.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    forceSubmit() {
+        // Find the form and submit it
+        const form = this.element.querySelector('form');
+        if (form) {
+             // Create a hidden input to indicate forced submission implies timeout if needed, 
+             // but strictly just submitting is enough usually.
+            form.requestSubmit();
+        }
+    }
+
+    disconnect() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
     }
 
     showQuestion(index) {
@@ -85,6 +132,11 @@ export default class extends Controller {
             // Exam Mode: Just mark as answered (Blue)
             cell.classList.remove('bg-slate-200');
             cell.classList.add('bg-sky-500', 'shadow-[0_0_15px_rgba(14,165,233,0.6)]', 'border-sky-300');
+            
+            // Auto-advance to next question
+            setTimeout(() => {
+                this.next();
+            }, 300);
         } else {
             // Training Mode
             this.handleTrainingValidation(questionContainer, questionId, cell);

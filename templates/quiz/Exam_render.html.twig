@@ -3,11 +3,11 @@
 {% block title %}Quiz - {{ quiz.Titre }}{% endblock %}
 
 {% block body %}
-    {% set isExam = quiz.Mode == 'Exam' %}
+    {% set isExam = quiz.Type == 'Exam' %}
     
     <div class="fixed inset-0 overflow-hidden flex flex-col pt-16 bg-slate-50 transition-colors duration-500" 
          data-controller="quiz"
-         data-quiz-mode-value="{{ quiz.Mode }}"
+         data-quiz-mode-value="{{ quiz.Type }}"
          data-quiz-time-limit-value="{{ quiz.timeLimit|default(0) }}">
         
         <div class="flex-1 flex flex-row-reverse items-center w-full max-w-7xl mx-auto p-4 gap-6 h-full overflow-hidden relative z-10">
@@ -34,7 +34,7 @@
                         <span class="inline-block px-4 py-1 rounded-full text-sm font-medium {{ isExam ? 'bg-sky-100 text-sky-800 border border-sky-200' : 'bg-indigo-100 text-indigo-800 border border-indigo-200' }}">
                             Mode {{ quiz.type }}
                         </span>
-
+                        
                         {% if quiz.timeLimit %}
                             <div class="text-xl font-mono font-bold text-slate-600 bg-white px-3 py-1 rounded-md border border-slate-200 shadow-sm flex items-center gap-2" data-quiz-target="timer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-timer"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
@@ -87,7 +87,6 @@
                                                                 name="q_{{ question.id }}[]" 
                                                                 value="{{ answer.id }}"
                                                                 data-action="change->quiz#validate"
-                                                                data-is-correct="{{ answer.isCorrect ? 'true' : 'false' }}"
                                                                 class="w-5 h-5 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500 bg-white mt-0.5">
                                                         </div>
                                                         

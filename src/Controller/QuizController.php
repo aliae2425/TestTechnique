@@ -48,7 +48,9 @@ final class QuizController extends AbstractController
 
         $questions = $this->getQuizQuestions($template, $questionRepository);
 
-        return $this->render('quiz/render.html.twig', [
+        $view = $template->getType() === 'Exam' ? 'quiz/Exam_render.html.twig' : 'quiz/render.html.twig';
+
+        return $this->render($view, [
             'quiz' => $template,
             'questions' => $questions,
             'quizSession' => $session,
@@ -90,10 +92,12 @@ final class QuizController extends AbstractController
         $entityManager->persist($session);
         $entityManager->flush();
         
+        $totalQuestions = (int) $request->request->get('total_questions', count($results));
+
         return $this->render('quiz/result.html.twig', [
             'quiz' => $template,
             'score' => $score,
-            'total' => count($results),
+            'total' => $totalQuestions,
             'results' => $results
         ]);
     }
