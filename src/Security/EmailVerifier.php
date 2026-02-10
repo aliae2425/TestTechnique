@@ -37,6 +37,22 @@ class EmailVerifier
         $this->mailer->send($email);
     }
 
+    public function sendEmailConfirmationCode(User $user, TemplatedEmail $email): void
+    {
+        $code = (string) random_int(100000, 999999);
+        
+        $user->setVerificationCode($code);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        $context = $email->getContext();
+        $context['verificationCode'] = $code;
+        
+        $email->context($context);
+
+        $this->mailer->send($email);
+    }
+
     /**
      * @throws VerifyEmailExceptionInterface
      */
