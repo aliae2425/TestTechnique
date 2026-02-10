@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -23,8 +24,11 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Security $security): Response
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_user_dashboard');
+        }
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -49,6 +53,7 @@ class RegistrationController extends AbstractController
             );
 
             // do anything else you need here, like send an email
+            $security->login($user, 'form_login', 'main');
 
             return $this->redirectToRoute('app_user_dashboard');
         }
@@ -59,8 +64,11 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register/entreprise', name: 'app_register_entreprise')]
-    public function registerEntreprise(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function registerEntreprise(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Security $security): Response
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_user_dashboard');
+        }
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -86,6 +94,7 @@ class RegistrationController extends AbstractController
             );
 
             // do anything else you need here, like send an email
+            $security->login($user, 'form_login', 'main');
 
             return $this->redirectToRoute('app_user_dashboard');
         }
