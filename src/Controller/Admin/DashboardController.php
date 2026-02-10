@@ -13,15 +13,99 @@ use App\Entity\QuizSession;
 use App\Entity\QuizTemplate;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
+    public function __construct(
+        private ChartBuilderInterface $chartBuilder,
+        private EntityManagerInterface $entityManager
+    ) {
+    }
 
     public function index(): Response
     {
+        // Fetch data for users and enterprises
+        // This is a simplified example. In production, you'd want to group by date properly using SQL or a processed array.
+        // Since roles are JSON array, we use LIKE for simple filtering if database is simple, or just PHP filtering for small datasets.
+        
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        
+        $dataUsers = [];
+        $dataEnterprises = [];
+        $dates = [];
 
-        return $this->render('admin/dashboard/index.html.twig');
+        // Sort users by date to ensure proper timeline
+        usort($users, fn($a, $b) => $a->getCreatedAt() <=> $b->getCreatedAt());
+
+        foreach ($users as $user) {
+            $date = $user->getCreatedAt() ? $user->getCreatedAt()->format('Y-m') : 'N/A';
+            if (!in_array($date, $dates)) {
+                $dates[] = $date;
+                $dataUsers[$date] = 0;
+                $dataEnterprises[$date] = 0;
+            }
+
+            if (in_array('ROLE_ENTREPRISE', $user->getRoles())) {
+                $dataEnterprises[$date]++;
+            } else {
+                // Assuming non-enterprise are regular users. Adjust if you want to exclude Admins.
+                $dataUsers[$date]++;
+            }
+        }
+        
+        // Accumulate counts for "evolution" (cumulative)
+        $cumulativeUsers = 0;
+        $cumulativeEnterprises = 0;
+        $chartDataUsers = [];
+        $chartDataEnterprises = [];
+
+        foreach ($dates as $date) {
+            $cumulativeUsers += $dataUsers[$date];
+            $cumulativeEnterprises += $dataEnterprises[$date];
+            $chartDataUsers[] = $cumulativeUsers;
+            $chartDataEnterprises[] = $cumulativeEnterprises;
+        }
+
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
+
+        $chart->setData([
+            'labels' => $dates,
+            'datasets' => [
+                [
+                    'label' => 'Utilisateurs',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'borderColor' => 'rgb(255, 99, 132)',
+                    'data' => $chartDataUsers,
+                ],
+                [
+                    'label' => 'Entreprises',
+                    'backgroundColor' => 'rgb(54, 162, 235)',
+                    'borderColor' => 'rgb(54, 162, 235)',
+                    'data' => $chartDataEnterprises,
+                ],
+            ],
+        ]);
+
+        $chart->setOptions([
+            'maintainAspectRatio' => false,
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => 0,
+                    'suggestedMax' => 10,
+                ],
+                'x' => [
+                    'display' => true,
+                ],
+            ],
+        ]);
+
+        return $this->render('admin/dashboard/index.html.twig', [
+            'chart' => $chart,
+        ]);
     }
 
     public function configureDashboard(): Dashboard
@@ -39,7 +123,8 @@ class DashboardController extends AbstractDashboardController
     public function configureAssets(): Assets
     {
         return Assets::new()
-            ->addCssFile('admin');
+            ->addAssetMapperEntry('admin')
+            ->addAssetMapperEntry('app');
     }
 
     public function configureMenuItems(): iterable

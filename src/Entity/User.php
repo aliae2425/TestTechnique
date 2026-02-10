@@ -63,10 +63,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $xp = null;
 
+    #[ORM\Column(options: ["default" => "CURRENT_TIMESTAMP"])]
+    private ?\DateTimeImmutable $createdAt = null;
+
     public function __construct()
     {
         $this->quizSessions = new ArrayCollection();
         $this->xp = 0; // Default XP set to 0
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -299,4 +303,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
 }
