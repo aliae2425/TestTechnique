@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vérification du code{% endblock %}
+
+{% block body %}
+    <div class="flex min-h-screen w-full">
+        {# Left Side - Form #}
+        <div class="flex w-full flex-col justify-center px-4 py-12 lg:w-1/2 lg:px-12">
+            <div class="mx-auto w-full max-w-sm">
+                {% for flash_error in app.flashes('verify_code_error') %}
+                    <div class="mb-4 rounded-md bg-destructive/15 p-3 text-sm text-destructive" role="alert">{{ flash_error }}</div>
+                {% endfor %}
+
+                <twig:Card class="w-full">
+                    <twig:Card:Header>
+                        <twig:Card:Title class="text-2xl font-bold">Vérification</twig:Card:Title>
+                        <twig:Card:Description>Entrez le code à 6 chiffres reçu par email pour activer votre compte.</twig:Card:Description>
+                    </twig:Card:Header>
+                    <twig:Card:Content>
+                        {{ form_start(form, {'attr': {'class': 'space-y-4'}}) }}
+                            
+                            <div class="grid gap-2">
+                                {{ form_widget(form.code, {'attr': {'class': 'flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-2xl text-center tracking-[1em] ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground placeholder:tracking-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                                <div class="text-[0.8rem] text-muted-foreground text-center">
+                                    {{ form_errors(form.code) }}
+                                </div>
+                            </div>
+
+                            <twig:Button type="submit" class="w-full">
+                                Vérifier
+                            </twig:Button>
+                        {{ form_end(form) }}
+                    </twig:Card:Content>
+                </twig:Card>
+            </div>
+        </div>
+        
+        {# Right Side - Image/Background #}
+        <div class="hidden lg:block lg:w-1/2 relative bg-muted">
+            <img 
+                src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop" 
+                alt="Workspace" 
+                class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+            />
+        </div>
+    </div>
+{% endblock %}
