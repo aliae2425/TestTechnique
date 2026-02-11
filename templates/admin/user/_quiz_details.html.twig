@@ -1,0 +1,95 @@
+<div class="card card-body border-0 bg-transparent">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="card-title mb-0">
+            {{ session.quizTemplate.Titre|default('Quiz supprimé') }}
+        </h5>
+        <span class="badge {{ session.finalScore >= 50 ? 'badge-success' : 'badge-danger' }}">
+            Score: {{ session.finalScore ?? 0 }}%
+        </span>
+    </div>
+    
+    <p class="text-muted small mb-3">
+        Effectué le {{ session.startAt ? session.startAt|date('d/m/Y à H:i') : 'N/A' }}
+    </p>
+
+    <!-- Filter Buttons -->
+    <div class="mb-3" data-controller="quiz-details-filter">
+        <div class="flex gap-2 mb-3" role="group" aria-label="Filtre des réponses">
+            <twig:Button variant="default" class=" mt-4" size="sm"
+                    data-action="click->quiz-details-filter#filterAll"
+                    data-quiz-details-filter-target="filterBtn">Tout</twig:Button>
+            <twig:Button variant="submit" class=" mt-4" size="sm"
+                    data-action="click->quiz-details-filter#filterCorrect"
+                    data-quiz-details-filter-target="filterBtn">Correctes</twig:Button>
+            <twig:Button variant="submit" class=" mt-4" size="sm" 
+                    data-action="click->quiz-details-filter#filterIncorrect"
+                    data-quiz-details-filter-target="filterBtn">Incorrectes</twig:Button>
+        </div>
+
+        <h6 class="mb-3 border-bottom pb-2">Détails des réponses</h6>
+        
+        {% if session.userReponses is empty %}
+            <div class="p-3 text-center text-muted">
+                <i class="fas fa-inbox mb-2"></i><br>
+                Aucune réponse enregistrée pour cette session.
+            </div>
+        {% else %}
+            <div>
+                {% for userResponse in session.userReponses %}
+                    {% set status = (userResponse.Reponse and userResponse.Reponse.isCorrect) ? 'correct' : 'incorrect' %}
+                    <div class="mb-4 pb-3" 
+                        data-quiz-details-filter-target="item"
+                        data-status="{{ status }}">
+                        
+                        <div class="fw-bold mb-2 h6">{{ userResponse.Question.titled }}</div>
+                        
+                        {% if userResponse.Question.Description %}
+                            <div class="mb-3 small text-muted fst-italic">
+                                {{ userResponse.Question.Description|raw }}
+                            </div>
+                        {% endif %}
+
+                        <div class="list-group">
+                            {% for answer in userResponse.Question.Reponses %}
+                                {% set isUserChoice = userResponse.Reponse and userResponse.Reponse.id == answer.id %}
+                                {% set isCorrectAnswer = answer.isCorrect %}
+                                {% set itemClass = '' %}
+                                {% set icon = '' %}
+
+                                {% if isUserChoice and isCorrectAnswer %}
+                                    {% set itemClass = 'list-group-item-success fw-bold' %}
+                                    {% set icon = '<i class="fas fa-check-circle text-success float-end"></i>' %}
+                                {% elseif isUserChoice and not isCorrectAnswer %}
+                                    {% set itemClass = 'list-group-item-danger' %}
+                                    {% set icon = '<i class="fas fa-times-circle text-danger float-end"></i>' %}
+                                {% elseif not isUserChoice and isCorrectAnswer %}
+                                    {% set itemClass = 'list-group-item-warning' %}
+                                    {% set icon = '<i class="fas fa-check text-success float-end"></i>' %}
+                                {% else %}
+                                    {% set itemClass = 'bg-transparent' %}
+                                {% endif %}
+
+                                <div class="list-group-item {{ itemClass }}">
+                                    {{ answer.text }}
+                                    {{ icon|raw }}
+                                    {% if isUserChoice %}
+                                        <span class="badge {{ isCorrectAnswer ? 'bg-success' : 'bg-danger' }} ms-2">Votre réponse</span>
+                                    {% endif %}
+                                    {% if isCorrectAnswer and not isUserChoice %}
+                                        <span class="badge bg-success ms-2">Bonne réponse</span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if userResponse.Reponse is null %}
+                             <div class="mt-2 text-danger small">
+                                <i class="fas fa-exclamation-triangle"></i> Vous n'avez pas répondu à cette question.
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
