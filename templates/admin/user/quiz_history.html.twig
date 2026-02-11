@@ -10,7 +10,7 @@
                    data-action="input->searchable-table#search">
         </div>
 
-        <table class="table table-sm table-striped">
+        <table class="table table-sm">
             <thead>
                 <tr>
                     <th style="cursor: pointer" data-action="click->searchable-table#sort">
@@ -22,25 +22,68 @@
                     <th style="cursor: pointer" data-action="click->searchable-table#sort">
                         Score <span class="sort-icon text-muted small">⇅</span>
                     </th>
+                    <th></th>
                 </tr>
             </thead>
-            <tbody>
-                {% for session in field.value %}
-                    <tr data-searchable-table-target="row">
+            {% for session in field.value %}
+                <tbody data-searchable-table-target="group">
+                    <tr>
                         <td>{{ session.quizTemplate.Titre|default('Quiz supprimé') }}</td>
-                    <td>{{ session.startAt ? session.startAt|date('d/m/Y H:i') : 'N/A' }}</td>
-                    <td>
-                        {% if session.finalScore is not null %}
-                            <span class="badge {{ session.finalScore >= 50 ? 'badge-success' : 'badge-danger' }}">
-                                {{ session.finalScore }}%
-                            </span>
-                        {% else %}
-                            <span class="badge badge-warning">En cours</span>
-                        {% endif %}
-                    </td>
-                </tr>
+                        <td>{{ session.startAt ? session.startAt|date('d/m/Y H:i') : 'N/A' }}</td>
+                        <td>
+                            {% if session.finalScore is not null %}
+                                <span class="badge {{ session.finalScore >= 50 ? 'badge-success' : 'badge-danger' }}">
+                                    {{ session.finalScore }}%
+                                </span>
+                            {% else %}
+                                <span class="badge badge-warning">En cours</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-link text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#details-{{ session.id }}" aria-expanded="false" aria-controls="details-{{ session.id }}">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="p-0 border-0">
+                            <!-- Use .show class conditionally if you want it open by default, otherwise just collapse -->
+                            <div class="collapse p-0" id="details-{{ session.id }}">
+                                <div class="card card-body m-2 bg-light">
+                                    <h6 class="mb-3">Détails des réponses</h6>
+                                    {% if session.userReponses is empty %}
+                                        <p class="text-muted">Aucune réponse enregistrée.</p>
+                                    {% else %}
+                                        <ul class="list-group list-group-flush">
+                                            {% for userResponse in session.userReponses %}
+                                                <li class="list-group-item bg-transparent">
+                                                    <div class="fw-bold mb-1">{{ userResponse.Question.titled }}</div>
+                                                    <div>
+                                                        <span class="badge {{ userResponse.Reponse and userResponse.Reponse.isCorrect ? 'badge-success' : 'badge-danger' }}">
+                                                            Votre réponse
+                                                        </span>
+                                                        {{ userResponse.Reponse ? userResponse.Reponse.text : 'Non répondu' }}
+                                                    </div>
+                                                    {% if userResponse.Reponse and not userResponse.Reponse.isCorrect %}
+                                                        <div class="mt-1 text-success small">
+                                                            <i class="fas fa-check"></i> Correcte : 
+                                                            {% for ans in userResponse.Question.Reponses %}
+                                                                {% if ans.isCorrect %}
+                                                                    <strong>{{ ans.text }}</strong>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             {% endfor %}
-        </tbody>
         </table>
     </div>
 {% endif %}
