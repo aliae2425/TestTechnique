@@ -4,9 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use Dom\Text;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -22,14 +26,20 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+             ->add(Crud::PAGE_INDEX, Action::DETAIL);
+    }
+
     public function configureFields(string $pageName): iterable
     {
+        
+        yield FormField::addTab('Utilisateur');
         yield IdField::new('id')->hideOnForm();
         yield TextField::new('primaryRole', 'Type de compte')
             ->setFormTypeOption('disabled', 'disabled')
             ->setLabel('Type de compte');
-
-        yield FormField::addTab('Utilisateur');
         yield EmailField::new('email', 'Email');
         yield ChoiceField::new('roles', 'Rôles')
             ->setChoices([
@@ -50,6 +60,9 @@ class UserCrudController extends AbstractCrudController
         yield IntegerField::new('xp', 'XP');
         
         yield FormField::addTab('Resultats Quiz');
+        yield CollectionField::new('quizSessions', 'Historique des Quiz')
+            ->setTemplatePath('admin/user/quiz_history.html.twig')
+            ->onlyOnDetail();
         yield FormField::addTab('formations');
 
         }

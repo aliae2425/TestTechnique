@@ -171,4 +171,12 @@ class QuizSession
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        $quizName = $this->quizTemplate ? $this->quizTemplate->getTitre() : 'Quiz supprimé';
+        $date = $this->startAt ? $this->startAt->format('d/m/Y H:i') : 'Date inconnue';
+        $score = $this->finalScore !== null ? $this->finalScore . '%' : 'N/A';
+        return sprintf('%s - %s - Score: %s', $quizName, $date, $score);
+    }
 }
