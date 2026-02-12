@@ -31,13 +31,43 @@
                         <div class="table-responsive">
                             <table class="table table-hover align-middle">
                                 <thead class="table-light">
+                                    {% set sortField = app.request.query.get('sort_field', 'totalAttempts') %}
+                                    {% set sortOrder = app.request.query.get('sort_order', 'DESC') %}
+                                    
                                     <tr>
-                                        <th>ID</th>
+                                        <th>
+                                            <a href="{{ ea_url().set('view', 'home').set('sort_field', 'id').set('sort_order', sortField == 'id' and sortOrder == 'DESC' ? 'ASC' : 'DESC') }}" class="text-decoration-none text-dark">
+                                                ID
+                                                {% if sortField == 'id' %}
+                                                    <i class="fas fa-arrow-{{ sortOrder == 'ASC' ? 'up' : 'down' }} small ms-1"></i>
+                                                {% else %}
+                                                     <i class="fas fa-sort text-muted ms-1 small" style="opacity: 0.3"></i>
+                                                {% endif %}
+                                            </a>
+                                        </th>
                                         <th>Question</th>
                                         <th>Niveau</th>
-                                        <th class="text-center">Réponses (Total)</th>
+                                        <th class="text-center">
+                                            <a href="{{ ea_url().set('view', 'home').set('sort_field', 'totalAttempts').set('sort_order', sortField == 'totalAttempts' and sortOrder == 'DESC' ? 'ASC' : 'DESC') }}" class="text-decoration-none text-dark">
+                                                Réponses (Total)
+                                                {% if sortField == 'totalAttempts' %}
+                                                    <i class="fas fa-arrow-{{ sortOrder == 'ASC' ? 'up' : 'down' }} small ms-1"></i>
+                                                {% else %}
+                                                     <i class="fas fa-sort text-muted ms-1 small" style="opacity: 0.3"></i>
+                                                {% endif %}
+                                            </a>
+                                        </th>
                                         <th class="text-center">Correctes</th>
-                                        <th class="text-center">Taux de succès</th>
+                                        <th class="text-center">
+                                            <a href="{{ ea_url().set('view', 'home').set('sort_field', 'successRate').set('sort_order', sortField == 'successRate' and sortOrder == 'DESC' ? 'ASC' : 'DESC') }}" class="text-decoration-none text-dark">
+                                                Taux de succès
+                                                {% if sortField == 'successRate' %}
+                                                    <i class="fas fa-arrow-{{ sortOrder == 'ASC' ? 'up' : 'down' }} small ms-1"></i>
+                                                {% else %}
+                                                     <i class="fas fa-sort text-muted ms-1 small" style="opacity: 0.3"></i>
+                                                {% endif %}
+                                            </a>
+                                        </th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>

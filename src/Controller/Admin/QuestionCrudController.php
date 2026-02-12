@@ -69,8 +69,16 @@ class QuestionCrudController extends AbstractCrudController
         if (Crud::PAGE_INDEX === $responseParameters->get('pageName')) {
             $view = $this->getContext()->getRequest()->query->get('view');
             if ($view === 'home') {
-                 $stats = $this->questionRepository->getQuestionStats();
+                 // Get sort params from query string
+                 $request = $this->getContext()->getRequest();
+                 $sortField = $request->query->get('sort_field', 'totalAttempts');
+                 $sortOrder = $request->query->get('sort_order', 'DESC');
+                 
+                 $stats = $this->questionRepository->getQuestionStats($sortField, $sortOrder);
+                 
                  $responseParameters->set('questionStats', $stats);
+                 $responseParameters->set('currentSortField', $sortField);
+                 $responseParameters->set('currentSortOrder', $sortOrder);
             }
         }
         return $responseParameters;

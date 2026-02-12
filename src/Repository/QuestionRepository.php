@@ -68,18 +68,35 @@ class QuestionRepository extends ServiceEntityRepository
              ->getResult();
     }
 
-    public function getQuestionStats(): array
+    public function getQuestionStats(string $sortField = 'totalAttempts', string $sortOrder = 'DESC'): array
     {
-        return $this->getEntityManager()->createQueryBuilder()
+        $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('q.id, q.titled, q.type, q.level, COUNT(ur.id) as totalAttempts, ' .
                      'SUM(CASE WHEN a.is_correct = true THEN 1 ELSE 0 END) as correctCount')
             ->from('App\Entity\Question', 'q')
             ->leftJoin('App\Entity\UserReponses', 'ur', 'WITH', 'ur.Question = q')
             ->leftJoin('ur.Reponse', 'a')
-            ->groupBy('q.id')
-            ->orderBy('totalAttempts', 'DESC')
-            ->getQuery()
-            ->getResult();
+            ->groupBy('q.id');
+
+        // Map frontend sort fields to DQL fields
+        switch ($sortField) {
+            case 'id':
+                $qb->orderBy('q.id', $sortOrder);
+                break;
+            case 'totalAttempts':
+                $qb->orderBy('totalAttempts', $sortOrder);
+                break;
+            case 'successRate':
+                // Complex sorting for calculated field. 
+                // We add a custom HIDDEN field to sort by it
+                $qb->addSelect('(SUM(CASE WHEN a.is_correct = true THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(ur.id), 0)) as HIDDEN successRateVal');
+                $qb->orderBy('successRateVal', $sortOrder);
+                break;
+            default:
+                $qb->orderBy('totalAttempts', 'DESC');
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     public function getAnswerDistribution(int $questionId): array
