@@ -26,7 +26,9 @@ export default class extends Controller {
 
         try {
             const response = await fetch(url);
-            if (!response.ok) throw new Error('Erreur réseau');
+            if (!response.ok) {
+                 throw new Error(`Erreur réseau: ${response.status} ${response.statusText}`);
+            }
             
             const html = await response.text();
             this.modalBodyTarget.innerHTML = html;

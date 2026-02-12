@@ -82,6 +82,19 @@ class QuestionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getAnswerDistribution(int $questionId): array
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('a.text, a.is_correct, COUNT(ur.id) as count')
+            ->from('App\Entity\Answer', 'a')
+            ->leftJoin('App\Entity\UserReponses', 'ur', 'WITH', 'ur.Reponse = a')
+            ->where('a.question = :questionId')
+            ->setParameter('questionId', $questionId)
+            ->groupBy('a.id')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    {
     //        return $this->createQueryBuilder('q')
     //            ->andWhere('q.exampleField = :val')

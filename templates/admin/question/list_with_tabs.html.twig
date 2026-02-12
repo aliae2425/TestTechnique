@@ -25,7 +25,7 @@
         {% if currentView == 'home' %}
             {# STATS VIEW #}
             <div class="card border-0 shadow-sm mt-3">
-                <div class="card-body">
+                <div class="card-body" data-controller="ajax-modal">
                     <h5 class="card-title mb-4">Statistiques par Question</h5>
                     {% if questionStats is defined and questionStats|length > 0 %}
                         <div class="table-responsive">
@@ -38,6 +38,7 @@
                                         <th class="text-center">Réponses (Total)</th>
                                         <th class="text-center">Correctes</th>
                                         <th class="text-center">Taux de succès</th>
+                                        <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -62,11 +63,38 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-info text-white" 
+                                                        data-action="click->ajax-modal#open"
+                                                        data-url="{{ path('admin_question_stats_ajax', {id: stat.id}) }}">
+                                                    <i class="fas fa-chart-pie me-1"></i> Détails
+                                                </button>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Modal Container for Ajax Content -->
+                        <div class="modal fade" id="ajaxModal" tabindex="-1" aria-labelledby="ajaxModalLabel" aria-hidden="true" data-ajax-modal-target="modal">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="ajaxModalLabel" data-ajax-modal-target="title">Chargement...</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" data-ajax-modal-target="modalBody">
+                                        <div class="text-center p-5">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Chargement...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     {% else %}
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i> Aucune statistique disponible (Aucune réponse enregistrée).
