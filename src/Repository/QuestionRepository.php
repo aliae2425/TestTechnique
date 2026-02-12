@@ -67,6 +67,21 @@ class QuestionRepository extends ServiceEntityRepository
              ->getQuery()
              ->getResult();
     }
+
+    public function getQuestionStats(): array
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('q.id, q.titled, q.type, q.level, COUNT(ur.id) as totalAttempts, ' .
+                     'SUM(CASE WHEN a.is_correct = true THEN 1 ELSE 0 END) as correctCount')
+            ->from('App\Entity\Question', 'q')
+            ->leftJoin('App\Entity\UserReponses', 'ur', 'WITH', 'ur.Question = q')
+            ->leftJoin('ur.Reponse', 'a')
+            ->groupBy('q.id')
+            ->orderBy('totalAttempts', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    {
     //        return $this->createQueryBuilder('q')
     //            ->andWhere('q.exampleField = :val')

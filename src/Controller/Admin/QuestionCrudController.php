@@ -14,9 +14,21 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter; // Changed from TextFilter to ChoiceFilter for better UX if needed, or TextFilter
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
+use App\Repository\QuestionRepository;
 
 class QuestionCrudController extends AbstractCrudController
 {
+    private QuestionRepository $questionRepository;
+
+    public function __construct(QuestionRepository $questionRepository)
+    {
+        $this->questionRepository = $questionRepository;
+    }
+
     public static function getEntityFqcn(): string
     {
         return Question::class;
@@ -34,13 +46,35 @@ class QuestionCrudController extends AbstractCrudController
         return $question;
     }
 
-    // public function configureCrud(Crud $crud): Crud
-    // {
-    //     return $crud
-    //         ->overrideTemplates([
-    //             'crud/index' => 'admin/question/index.html.twig',
-    //         ]);
-    // }
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->overrideTemplates([
+                'crud/index' => 'admin/question/list_with_tabs.html.twig',
+            ]);
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(ChoiceFilter::new('level')->setChoices([
+                'Débutant' => 'Débutant',
+                'Intermédiaire' => 'Intermédiaire',
+                'Avancé' => 'Avancé',
+            ]));
+    }
+
+    public function configureResponseParameters(KeyValueStore $responseParameters): KeyValueStore
+    {
+        if (Crud::PAGE_INDEX === $responseParameters->get('pageName')) {
+            $view = $this->getContext()->getRequest()->query->get('view');
+            if ($view === 'home') {
+                 $stats = $this->questionRepository->getQuestionStats();
+                 $responseParameters->set('questionStats', $stats);
+            }
+        }
+        return $responseParameters;
+    }
 
     public function configureFields(string $pageName): iterable
     {

@@ -1,0 +1,81 @@
+{% extends '@EasyAdmin/crud/index.html.twig' %}
+
+{% block content_title %}
+    {{ parent() }}
+{% endblock %}
+
+{% block main %}
+    {% set currentView = app.request.query.get('view', 'list') %}
+
+    <div class="mb-4">
+        {# Top Level Tabs: Home vs List #}
+        <ul class="nav nav-pills mb-3 p-2 border-bottom" role="tablist">
+             <li class="nav-item">
+                <a class="nav-link {{ currentView == 'list' ? 'active' : '' }}" href="{{ ea_url().unset('view') }}">
+                    <i class="fas fa-list me-2"></i> Liste des questions
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ currentView == 'home' ? 'active' : '' }}" href="{{ ea_url().set('view', 'home').unset('filters') }}">
+                    <i class="fas fa-chart-bar me-2"></i> Statistiques (Home)
+                </a>
+            </li>
+        </ul>
+
+        {% if currentView == 'home' %}
+            {# STATS VIEW #}
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Statistiques par Question</h5>
+                    {% if questionStats is defined and questionStats|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Question</th>
+                                        <th>Niveau</th>
+                                        <th class="text-center">Réponses (Total)</th>
+                                        <th class="text-center">Correctes</th>
+                                        <th class="text-center">Taux de succès</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for stat in questionStats %}
+                                        {% set successRate = stat.totalAttempts > 0 ? (stat.correctCount / stat.totalAttempts) * 100 : 0 %}
+                                        <tr>
+                                            <td>#{{ stat.id }}</td>
+                                            <td style="max-width: 300px;">
+                                                <div class="fw-bold text-truncate" title="{{ stat.titled }}">{{ stat.titled }}</div>
+                                                <small class="text-muted">{{ stat.type }}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-secondary">{{ stat.level }}</span>
+                                            </td>
+                                            <td class="text-center fw-bold">{{ stat.totalAttempts }}</td>
+                                            <td class="text-center text-success">{{ stat.correctCount }}</td>
+                                            <td class="text-center">
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <span class="me-2 fw-bold text-{{ successRate >= 50 ? 'success' : 'danger' }}">{{ successRate|round(1) }}%</span>
+                                                    <div class="progress" style="width: 50px; height: 6px;">
+                                                        <div class="progress-bar bg-{{ successRate >= 50 ? 'success' : 'danger' }}" role="progressbar" style="width: {{ successRate }}%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> Aucune statistique disponible (Aucune réponse enregistrée).
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}            
+            {{ parent() }}
+        {% endif %}
+    </div>
+{% endblock %}
