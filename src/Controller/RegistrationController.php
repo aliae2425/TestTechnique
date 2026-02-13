@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
@@ -79,6 +80,9 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_user_dashboard');
         }
         $user = new User();
+        $company = new Company();
+        $company->setName('Entreprise'); // Valeur par défaut, à remplacer par un champ de formulaire si besoin
+        $user->setCompany($company); // Associer l'entreprise au nouvel utilisateur
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -91,6 +95,7 @@ class RegistrationController extends AbstractController
             $user->setRoles(['ROLE_ENTREPRISE']);
 
             $entityManager->persist($user);
+            $entityManager->persist($company);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
@@ -98,7 +103,7 @@ class RegistrationController extends AbstractController
                 (new TemplatedEmail())
                     ->from(new Address('noreply@418.archi', 'Mail teabot'))
                     ->to((string) $user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject('Votre code de vérification')
                     ->htmlTemplate('registration/code_email.html.twig')
             );
 
