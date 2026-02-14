@@ -12,6 +12,7 @@ use App\Entity\Question;
 use App\Entity\QuizSession;
 use App\Entity\QuizTemplate;
 use App\Entity\User;
+use App\Entity\Company;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
@@ -132,6 +133,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::section('Gestion des utilisateurs');
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
+        yield MenuItem::linkToCrud('Entreprises', 'fas fa-building', Company::class);
         yield MenuItem::section('Gestion des Quiz');
         yield MenuItem::linkToCrud('Quiz', 'fas fa-list', QuizTemplate::class);
         yield MenuItem::linkToCrud('Sessions', 'fas fa-calendar-check', QuizSession::class);

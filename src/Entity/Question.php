@@ -40,9 +40,6 @@ class Question
     public function __construct()
     {
         $this->Reponses = new ArrayCollection();
-        for ($i = 0; $i < 4; $i++) {
-            $this->addReponse(new Answer());
-        }
     }
 
     public function getId(): ?int
