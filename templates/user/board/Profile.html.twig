@@ -68,6 +68,12 @@
                                 <twig:ux:icon name="tabler:user" class="w-5 h-5" />
                                 Informations
                             </a>
+                            {% if is_granted('ROLE_ENTREPRISE') %}
+                            <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg font-medium transition-colors">
+                                <twig:ux:icon name="tabler:building" class="w-5 h-5" />
+                                Entreprises
+                            </a>
+                            {% endif %}
                             <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg font-medium transition-colors">
                                 <twig:ux:icon name="tabler:shield-lock" class="w-5 h-5" />
                                 Sécurité
