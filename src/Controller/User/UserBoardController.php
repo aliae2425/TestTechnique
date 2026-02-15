@@ -17,7 +17,7 @@ final class UserBoardController extends AbstractController
     #[Route('/board', name: 'app_user_dashboard')]
     public function index(): Response
     {
-        return $this->render('user_board/Dashboard.html.twig', [
+        return $this->render('user/board/Dashboard.html.twig', [
             'controller_name' => 'UserBoardController',
         ]);
     }
@@ -36,7 +36,7 @@ final class UserBoardController extends AbstractController
             return $this->redirectToRoute('app_user_profile');
         }
 
-        return $this->render('user_board/Profile.html.twig', [
+        return $this->render('user/board/Profile.html.twig', [
             'controller_name' => 'UserBoardController',
             'form' => $form->createView(),
         ]);

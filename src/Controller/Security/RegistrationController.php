@@ -51,7 +51,7 @@ class RegistrationController extends AbstractController
             //         ->from(new Address('noreply@418.archi', 'Mail teabot'))
             //         ->to((string) $user->getEmail())
             //         ->subject('Please Confirm your Email')
-            //         ->htmlTemplate('registration/confirmation_email.html.twig')
+            //         ->htmlTemplate('security/registration/confirmation_email.html.twig')
             // );
     
              $this->emailVerifier->sendEmailConfirmationCode($user,
@@ -59,7 +59,7 @@ class RegistrationController extends AbstractController
                     ->from(new Address('noreply@418.archi', 'Mail teabot'))
                     ->to((string) $user->getEmail())
                     ->subject('Votre code de vérification')
-                    ->htmlTemplate('registration/code_email.html.twig')
+                    ->htmlTemplate('security/registration/code_email.html.twig')
             );
 
             // do anything else you need here, like send an email
@@ -68,7 +68,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_verify_code');
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('security/registration/register.html.twig', [
             'registrationForm' => $form,
         ]);
     }
@@ -104,7 +104,7 @@ class RegistrationController extends AbstractController
                     ->from(new Address('noreply@418.archi', 'Mail teabot'))
                     ->to((string) $user->getEmail())
                     ->subject('Votre code de vérification')
-                    ->htmlTemplate('registration/code_email.html.twig')
+                    ->htmlTemplate('security/registration/code_email.html.twig')
             );
 
             // do anything else you need here, like send an email
@@ -113,7 +113,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_verify_code');
         }
 
-        return $this->render('registration/registerEntreprise.html.twig', [
+        return $this->render('security/registration/registerEntreprise.html.twig', [
             'registrationForm' => $form,
         ]);
     }
@@ -147,7 +147,7 @@ class RegistrationController extends AbstractController
             }
         }
 
-        return $this->render('registration/verify_code.html.twig', [
+        return $this->render('security/registration/verify_code.html.twig', [
             'form' => $form,
         ]);
     }

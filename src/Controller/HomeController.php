@@ -11,24 +11,24 @@ final class HomeController extends AbstractController
     #[Route('/', name: 'home_index')]
     public function index(): Response
     {
-        return $this->render('home/index.html.twig');
+        return $this->render('base/home/index.html.twig');
     }
 
     #[Route('/formations', name: 'home_formations')]
     public function formations(): Response
     {
-        return $this->render('home/formations.html.twig');
+        return $this->render('formation/index.html.twig');
     }
 
     #[Route('/TestTechnique', name: 'home_testTechnique')]
     public function testTechnique(): Response
     {
-        return $this->render('home/test_technique.html.twig');
+        return $this->render('formation/test_technique.html.twig');
     }
 
     #[Route('/certification', name: 'home_certification')]
     public function certification(): Response
     {
-        return $this->render('home/certification.html.twig');
+        return $this->render('formation/certification.html.twig');
     }
 }

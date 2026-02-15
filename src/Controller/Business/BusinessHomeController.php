@@ -28,7 +28,7 @@ final class BusinessHomeController extends AbstractController
 
         // TODO: $stats = $invitationRepo->getStatsForCompany($company);
         
-        return $this->render('business/dashboard.html.twig', [
+        return $this->render('entreprise/index.html.twig', [
             'company' => $company,
             // 'stats' => $stats,
         ]);
@@ -47,7 +47,7 @@ final class BusinessHomeController extends AbstractController
 
         // TODO: $invitations = $invitationRepo->findBy(['company' => $company], ['createdAt' => 'DESC']);
 
-        return $this->render('business/candidates/index.html.twig', [
+        return $this->render('entreprise/candidates/index.html.twig', [
             // 'invitations' => $invitations
         ]);
     }
@@ -73,7 +73,7 @@ final class BusinessHomeController extends AbstractController
         // 3. Générer Token unique
         // 4. Envoyer Email via MailerService
         
-        return $this->render('business/candidates/invite.html.twig', [
+        return $this->render('entreprise/candidates/invite.html.twig', [
             // 'form' => $form
         ]);
     }
@@ -87,7 +87,7 @@ final class BusinessHomeController extends AbstractController
         // TODO: Récupérer l'invitation et la session associée
         // Afficher les réponses spécifiques (Similaire à la vue Admin mais contexte Entreprise)
         
-        return $this->render('business/candidates/detail.html.twig', [
+        return $this->render('entreprise/candidates/detail.html.twig', [
             // 'invitation' => $invitation
         ]);
     }
