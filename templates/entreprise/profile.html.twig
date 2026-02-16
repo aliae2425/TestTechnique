@@ -3,68 +3,221 @@
 {% block title %}Profil Entreprise - {{ company.Name }}{% endblock %}
 
 {% block main_content %}
+    {# Carte Statistiques #}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <twig:Card class="md:col-span-1">
+            <twig:Card:Content class="pt-6 text-center">
+                <div class="mb-2 mx-auto w-12 h-12 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600">
+                    <twig:ux:icon name="tabler:users" class="w-6 h-6" />
+                </div>
+                <div class="text-3xl font-bold text-slate-800">{{ company.users|length }}</div>
+                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Employés</div>
+            </twig:Card:Content>
+        </twig:Card>
+        
+        <twig:Card class="md:col-span-1">
+            <twig:Card:Content class="pt-6 text-center">
+                <div class="mb-2 mx-auto w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                    <twig:ux:icon name="tabler:briefcase" class="w-6 h-6" />
+                </div>
+                <div class="text-3xl font-bold text-slate-800">{{ company.ActivitySector|default('-') }}</div> 
+                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Secteur</div>
+            </twig:Card:Content>
+        </twig:Card>
 
-    {# Carte Informations Entreprise #}
-    <twig:Card>
-        <twig:Card:Header>
-            <twig:Card:Title>Informations de l'entreprise</twig:Card:Title>
-            <twig:Card:Description>Mettez à jour les informations de votre entreprise.</twig:Card:Description>
-        </twig:Card:Header>
-        <twig:Card:Content>
-            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+        <twig:Card class="md:col-span-1">
+            <twig:Card:Content class="pt-6 text-center">
+                <div class="mb-2 mx-auto w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                    <twig:ux:icon name="tabler:building" class="w-6 h-6" />
+                </div>
+                <div class="text-3xl font-bold text-slate-800">{{ company.Size|default('-') }}</div>
+                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Taille</div>
+            </twig:Card:Content>
+        </twig:Card>
+    </div>
+
+    {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    
+    {% for message in app.flashes('success') %}
+        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+            <span class="font-medium">Succès !</span> {{ message }}
+        </div>
+    {% endfor %}
+
+    <!-- Tabs Header -->
+    <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="companyTab" role="tablist">
+            <li class="mr-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 active text-cyan-600 border-cyan-600" id="general-tab" type="button" role="tab" aria-controls="general" aria-selected="true" onclick="changeTab('general')">Informations générales</button>
+            </li>
+            <li class="mr-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="description-tab" type="button" role="tab" aria-controls="description" aria-selected="false" onclick="changeTab('description')">Description</button>
+            </li>
+            <li class="mr-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="users-tab" type="button" role="tab" aria-controls="users" aria-selected="false" onclick="changeTab('users')">Utilisateurs</button>
+            </li>
+        </ul>
+    </div>
+
+    <div id="companyTabContent">
+        {# TAB 1: Informations Générales #}
+        <div class="p-4 rounded-lg bg-white shadow-sm border border-slate-100" id="general" role="tabpanel" aria-labelledby="general-tab">
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 
-                {% for message in app.flashes('success') %}
-                    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-                        <span class="font-medium">Succès !</span> {{ message }}
+                <div class="space-y-2">
+                    {{ form_row(form.Name, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                </div>
+                <div class="space-y-2">
+                    {{ form_row(form.Contry, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                </div>
+                <div class="space-y-2">
+                    {{ form_row(form.ActivitySector, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                </div>
+                <div class="space-y-2">
+                    {{ form_row(form.Size, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                </div>
+            </div>
+
+            <h3 class="text-lg font-medium text-slate-900 mb-4">Adresses</h3>
+            {% set prototype %}
+                <div class="bg-slate-50 p-4 rounded-lg shadow-sm border border-slate-200 relative group" data-form-collection-target="element">
+                    <button type="button" class="absolute top-2 right-2 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity" data-action="form-collection#removeElement">
+                        <twig:ux:icon name="tabler:trash" class="w-5 h-5" />
+                    </button>
+                    <div class="space-y-3">
+                        {{ form_widget(form.adresses.vars.prototype) }}
+                    </div>
+                </div>
+            {% endset %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" 
+                 data-controller="form-collection"
+                 data-form-collection-index-value="{{ form.adresses|length > 0 ? form.adresses|last.vars.name + 1 : 0 }}"
+                 data-form-collection-prototype-value="{{ prototype|e('html_attr') }}">
+                
+                {% for adress in form.adresses %}
+                    <div class="bg-slate-50 p-4 rounded-lg shadow-sm border border-slate-200 relative group"
+                         data-form-collection-target="element">
+                        <button type="button" 
+                                class="absolute top-2 right-2 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                data-action="form-collection#removeElement">
+                            <twig:ux:icon name="tabler:trash" class="w-5 h-5" />
+                        </button>
+                        <div class="space-y-3">
+                            {{ form_row(adress.street, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                            <div class="grid grid-cols-2 gap-2">
+                                {{ form_row(adress.number, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                                {{ form_row(adress.ZipCode, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                            </div>
+                            {{ form_row(adress.Country, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                        </div>
                     </div>
                 {% endfor %}
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <twig:Label for="{{ form.Name.vars.id }}">Nom de l'entreprise</twig:Label>
-                        {{ form_widget(form.Name, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
-                        <div class="text-[0.8rem] text-muted-foreground">
-                            {{ form_errors(form.Name) }}
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <twig:Label for="{{ form.Contry.vars.id }}">Pays</twig:Label>
-                        {{ form_widget(form.Contry, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
-                        <div class="text-[0.8rem] text-muted-foreground">
-                            {{ form_errors(form.Contry) }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <twig:Label for="{{ form.ActivitySector.vars.id }}">Secteur d'activité</twig:Label>
-                        {{ form_widget(form.ActivitySector, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
-                        <div class="text-[0.8rem] text-muted-foreground">
-                            {{ form_errors(form.ActivitySector) }}
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <twig:Label for="{{ form.Size.vars.id }}">Taille de l'entreprise</twig:Label>
-                        {{ form_widget(form.Size, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
-                        <div class="text-[0.8rem] text-muted-foreground">
-                            {{ form_errors(form.Size) }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <twig:Label for="{{ form.logo.vars.id }}">Logo (URL)</twig:Label>
-                    {{ form_widget(form.logo, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
-                    <div class="text-[0.8rem] text-muted-foreground">
-                        {{ form_errors(form.logo) }}
-                    </div>
-                </div>
                 
-                <div class="flex justify-end pt-4">
-                    <twig:Button type="submit">Enregistrer les informations</twig:Button>
+                {# Placeholder pour ajouter une adresse - Action JS nécessaire #}
+                <button type="button" class="flex items-center justify-center p-6 border-2 border-dashed border-slate-300 rounded-lg hover:border-cyan-500 hover:bg-cyan-50 transition-colors text-slate-500 hover:text-cyan-600"
+                        data-action="form-collection#addElement">
+                    <twig:ux:icon name="tabler:plus" class="w-6 h-6 mr-2" />
+                    Ajouter une adresse
+                </button>
+            </div>
+             <div class="hidden" data-prototype="{{ prototype|e('html_attr') }}"></div>
+        </div>
+
+        {# TAB 2: Description #}
+        <div class="hidden p-4 rounded-lg bg-white shadow-sm border border-slate-100" id="description" role="tabpanel" aria-labelledby="description-tab">
+            <div class="mb-6">
+                {% if company.logo %}
+                    <div class="mb-4">
+                        <span class="block text-sm font-medium text-slate-700 mb-2">Logo actuel</span>
+                        <img src="{{ company.logo }}" alt="Logo" class="w-32 h-32 object-contain border rounded-lg bg-white p-2">
+                    </div>
+                {% endif %}
+                <div class="space-y-2">
+                     {{ form_row(form.logo, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
                 </div>
-            {{ form_end(form) }}
-        </twig:Card:Content>
-    </twig:Card>
+            </div>
+            <div class="space-y-2">
+                {{ form_row(form.Description, {'attr': {'class': 'flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50', 'rows': 8}}) }}
+            </div>
+        </div>
+
+        {# TAB 3: Utilisateurs #}
+        <div class="hidden p-4 rounded-lg bg-white shadow-sm border border-slate-100" id="users" role="tabpanel" aria-labelledby="users-tab">
+             <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-medium text-slate-900">Utilisateurs associés</h3>
+                <button type="button" class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors text-sm font-medium flex items-center">
+                    <twig:ux:icon name="tabler:user-plus" class="w-4 h-4 mr-2" />
+                    Ajouter un utilisateur
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Nom</th>
+                            <th scope="col" class="px-6 py-3">Email</th>
+                            <th scope="col" class="px-6 py-3">Rôle</th>
+                            <th scope="col" class="px-6 py-3 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in company.Users %}
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ user.username|default('N/A') }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ user.email }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {% for role in user.roles %}
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">{{ role }}</span>
+                                    {% endfor %}
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <a href="#" class="font-medium text-cyan-600 hover:underline">Editer</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                             <tr>
+                                <td colspan="4" class="px-6 py-4 text-center text-gray-500">Aucun utilisateur trouvé.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+     <div class="flex justify-end pt-6 border-t border-gray-200 mt-6 bg-white p-4 rounded-b-lg">
+        <twig:Button type="submit">Enregistrer les informations</twig:Button>
+    </div>
+
+    {{ form_end(form) }}
+
+    <script>
+        function changeTab(tabId) {
+            // Hide all tab content
+            document.querySelectorAll('[role="tabpanel"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            // Update tab buttons state
+            document.querySelectorAll('[role="tab"]').forEach(el => {
+                el.classList.remove('text-cyan-600', 'border-cyan-600');
+                el.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+                el.setAttribute('aria-selected', 'false');
+            });
+            
+            // Highlight selected tab button
+            const activeTab = document.getElementById(tabId + '-tab');
+            activeTab.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+            activeTab.classList.add('text-cyan-600', 'border-cyan-600');
+            activeTab.setAttribute('aria-selected', 'true');
+        }
+    </script>
 {% endblock %}

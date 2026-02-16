@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
@@ -41,6 +42,9 @@ class Company
      */
     #[ORM\OneToMany(targetEntity: Adress::class, mappedBy: 'Company', orphanRemoval: true)]
     private Collection $adresses;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $Description = null;
 
     public function __construct()
     {
@@ -169,6 +173,18 @@ class Company
                 $adress->setCompany(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+
+    public function setDescription(?string $Description): static
+    {
+        $this->Description = $Description;
 
         return $this;
     }
