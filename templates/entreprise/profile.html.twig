@@ -1,20 +1,70 @@
-{% extends 'base/base.html.twig' %}
+{% extends 'user/board/Profile.html.twig' %}
 
-{% block title %}Hello BusinessHomeController!{% endblock %}
+{% block title %}Profil Entreprise - {{ company.Name }}{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block main_content %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {# Carte Informations Entreprise #}
+    <twig:Card>
+        <twig:Card:Header>
+            <twig:Card:Title>Informations de l'entreprise</twig:Card:Title>
+            <twig:Card:Description>Mettez à jour les informations de votre entreprise.</twig:Card:Description>
+        </twig:Card:Header>
+        <twig:Card:Content>
+            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+                
+                {% for message in app.flashes('success') %}
+                    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                        <span class="font-medium">Succès !</span> {{ message }}
+                    </div>
+                {% endfor %}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/00_Dev/TestTechnique/src/Controller/BusinessHomeController.php</code></li>
-        <li>Your template at <code>D:/00_Dev/TestTechnique/templates/business_home/index.html.twig</code></li>
-    </ul>
-</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <twig:Label for="{{ form.Name.vars.id }}">Nom de l'entreprise</twig:Label>
+                        {{ form_widget(form.Name, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                        <div class="text-[0.8rem] text-muted-foreground">
+                            {{ form_errors(form.Name) }}
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <twig:Label for="{{ form.Contry.vars.id }}">Pays</twig:Label>
+                        {{ form_widget(form.Contry, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                        <div class="text-[0.8rem] text-muted-foreground">
+                            {{ form_errors(form.Contry) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <twig:Label for="{{ form.ActivitySector.vars.id }}">Secteur d'activité</twig:Label>
+                        {{ form_widget(form.ActivitySector, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                        <div class="text-[0.8rem] text-muted-foreground">
+                            {{ form_errors(form.ActivitySector) }}
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <twig:Label for="{{ form.Size.vars.id }}">Taille de l'entreprise</twig:Label>
+                        {{ form_widget(form.Size, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                        <div class="text-[0.8rem] text-muted-foreground">
+                            {{ form_errors(form.Size) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <twig:Label for="{{ form.logo.vars.id }}">Logo (URL)</twig:Label>
+                    {{ form_widget(form.logo, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'}}) }}
+                    <div class="text-[0.8rem] text-muted-foreground">
+                        {{ form_errors(form.logo) }}
+                    </div>
+                </div>
+                
+                <div class="flex justify-end pt-4">
+                    <twig:Button type="submit">Enregistrer les informations</twig:Button>
+                </div>
+            {{ form_end(form) }}
+        </twig:Card:Content>
+    </twig:Card>
 {% endblock %}

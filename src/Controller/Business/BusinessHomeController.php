@@ -40,7 +40,7 @@ final class BusinessHomeController extends AbstractController
      * - Gestion des utilisateurs rattachés à l'entreprise (Ajouter/Supprimer)
      */
     #[Route('/profile', name: 'profile')]
-    public function profile(Request $request): Response
+    public function profile(Request $request, \Doctrine\ORM\EntityManagerInterface $entityManager): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -50,10 +50,20 @@ final class BusinessHomeController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez être rattaché à une entreprise.');
         }
 
+        $form = $this->createForm(\App\Form\CompanyType::class, $company);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            $this->addFlash('success', 'Profil entreprise mis à jour avec succès !');
+            
+            return $this->redirectToRoute('business_profile');
+        }
+
         return $this->render('entreprise/profile.html.twig', [
             'company' => $company,
+            'form' => $form->createView(),
         ]);
-
     }
 
 

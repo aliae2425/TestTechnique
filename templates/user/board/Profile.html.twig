@@ -64,14 +64,14 @@
                 <aside class="w-full lg:w-64 flex-shrink-0">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 sticky top-24 overflow-hidden">
                         <nav class="flex flex-col p-2">
-                            <a href="#" class="flex items-center gap-3 px-4 py-3 bg-cyan-50 text-cyan-700 rounded-lg font-medium transition-colors">
+                            <a href="{{ path('app_user_profile') }}" class="flex items-center gap-3 px-4 py-3 {{ app.request.attributes.get('_route') == 'app_user_profile' ? 'bg-cyan-50 text-cyan-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }} rounded-lg font-medium transition-colors">
                                 <twig:ux:icon name="tabler:user" class="w-5 h-5" />
-                                Informations
+                                Informations Personnelles
                             </a>
                             {% if is_granted('ROLE_ENTREPRISE') %}
-                            <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg font-medium transition-colors">
+                            <a href="{{ path('business_profile') }}" class="flex items-center gap-3 px-4 py-3 {{ app.request.attributes.get('_route') == 'business_profile' ? 'bg-cyan-50 text-cyan-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }} rounded-lg font-medium transition-colors">
                                 <twig:ux:icon name="tabler:building" class="w-5 h-5" />
-                                Entreprises
+                                Profil Entreprise
                             </a>
                             {% endif %}
                             <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg font-medium transition-colors">
