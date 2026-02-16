@@ -35,6 +35,29 @@ final class BusinessHomeController extends AbstractController
     }
 
     /**
+     * Page de gestion du profil entreprise
+     * - Informations de l'entreprise (Nom, Secteur, Taille, etc.)
+     * - Gestion des utilisateurs rattachés à l'entreprise (Ajouter/Supprimer)
+     */
+    #[Route('/profile', name: 'profile')]
+    public function profile(Request $request): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $company = $user->getCompany();
+        
+        if (!$company) {
+            throw $this->createAccessDeniedException('Vous devez être rattaché à une entreprise.');
+        }
+
+        return $this->render('entreprise/profile.html.twig', [
+            'company' => $company,
+        ]);
+
+    }
+
+
+    /**
      * Gestion des Candidats / Invitations
      * Lister l'historique des envois avec statut (Envoyé, Ouvert, Terminé + Score)
      */
