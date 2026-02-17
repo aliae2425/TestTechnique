@@ -7,8 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Attribute as Vich;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
+#[Vich\Uploadable]
 class Company
 {
     #[ORM\Id]
@@ -34,8 +37,14 @@ class Company
     #[ORM\Column(length: 255)]
     private ?string $Size = null;
 
+    #[Vich\UploadableField(mapping: 'company_logo', fileNameProperty: 'logo')]
+    private ?File $imageFile = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $logo = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
     /**
      * @var Collection<int, Adress>
@@ -143,6 +152,32 @@ class Company
     public function setLogo(?string $logo): static
     {
         $this->logo = $logo;
+
+        return $this;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\UX\Dropzone\Form\DropzoneType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class CompanyType extends AbstractType
 {
@@ -34,9 +36,12 @@ class CompanyType extends AbstractType
                 '51-200' => '51-200',
                 '201+' => '201+',
              ]])
-            ->add('logo', TextType::class, [
-                'label' => 'Logo (URL)',
+            ->add('imageFile', DropzoneType::class, [
+                'label' => false,
                 'required' => false,
+                'attr' => [
+                   'placeholder' => 'Glissez-déposez le fichier ici ou cliquez pour parcourir',
+                ],
             ])
             ->add('Description', TextareaType::class, [
                 'label' => 'Description',
