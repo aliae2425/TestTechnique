@@ -34,7 +34,10 @@ class CompanyType extends AbstractType
                 '51-200' => '51-200',
                 '201+' => '201+',
              ]])
-            ->add('logo', TextType::class, ['label' => 'Logo (URL)'])
+            ->add('logo', TextType::class, [
+                'label' => 'Logo (URL)',
+                'required' => false,
+            ])
             ->add('Description', TextareaType::class, [
                 'label' => 'Description',
                 'required' => false,

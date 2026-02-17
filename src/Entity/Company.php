@@ -40,7 +40,7 @@ class Company
     /**
      * @var Collection<int, Adress>
      */
-    #[ORM\OneToMany(targetEntity: Adress::class, mappedBy: 'Company', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Adress::class, mappedBy: 'Company', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $adresses;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
