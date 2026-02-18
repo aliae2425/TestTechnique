@@ -72,12 +72,14 @@
                     </button>
                     <div class="space-y-3">
                         {{ form_row(form.adresses.vars.prototype.Title, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
-                        {{ form_row(form.adresses.vars.prototype.street, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
-                        <div class="grid grid-cols-2 gap-2">
+                        <div class="grid grid-cols-[100px_1fr] gap-2">
                             {{ form_row(form.adresses.vars.prototype.number, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
-                            {{ form_row(form.adresses.vars.prototype.ZipCode, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                            {{ form_row(form.adresses.vars.prototype.street, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
                         </div>
-                        {{ form_row(form.adresses.vars.prototype.Country, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                        <div class="grid grid-cols-2 gap-2">
+                             {{ form_row(form.adresses.vars.prototype.ZipCode, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                             {{ form_row(form.adresses.vars.prototype.Country, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                        </div>
                     </div>
                 </div>
             {% endset %}
@@ -96,12 +98,14 @@
                         </button>
                         <div class="space-y-3">
                             {{ form_row(adress.Title, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
-                            {{ form_row(adress.street, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
-                            <div class="grid grid-cols-2 gap-2">
+                            <div class="grid grid-cols-[100px_1fr] gap-2">
                                 {{ form_row(adress.number, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
-                                {{ form_row(adress.ZipCode, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                                {{ form_row(adress.street, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
                             </div>
-                            {{ form_row(adress.Country, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                            <div class="grid grid-cols-2 gap-2">
+                                {{ form_row(adress.ZipCode, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                                {{ form_row(adress.Country, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'}}) }}
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
