@@ -178,9 +178,15 @@
                                     {{ user.email }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {% for role in user.roles %}
-                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">{{ role }}</span>
-                                    {% endfor %}
+                                     {% if company.owner == user %}
+                                        <span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Propriétaire</span>
+                                    {% elseif 'ROLE_ENTREPRISE_ADMIN' in user.roles %}
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Admin</span>
+                                    {% elseif 'ROLE_ENTREPRISE_USER' in user.roles %}
+                                        <span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Utilisateur</span>
+                                    {% else %}
+                                        <span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Membre</span>
+                                    {% endif %}
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <a href="#" class="font-medium text-cyan-600 hover:underline">Editer</a>
