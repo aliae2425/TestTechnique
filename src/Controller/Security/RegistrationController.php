@@ -4,7 +4,9 @@ namespace App\Controller\Security;
 
 use App\Entity\Company;
 use App\Entity\User;
+use App\Form\InvitedRegistrationFormType;
 use App\Form\RegistrationFormType;
+use App\Repository\InvitationRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -149,6 +151,64 @@ class RegistrationController extends AbstractController
 
         return $this->render('security/registration/verify_code.html.twig', [
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/register/invitation/{token}', name: 'app_register_invitation')]
+    public function registerFromInvitation(
+        string $token,
+        Request $request,
+        InvitationRepository $invitationRepo,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager,
+        Security $security,
+    ): Response {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_user_dashboard');
+        }
+
+        $invitation = $invitationRepo->findOneBy(['token' => $token]);
+
+        if (!$invitation || $invitation->isExpired()) {
+            $this->addFlash('error', "Ce lien d'invitation est invalide ou a expiré.");
+            return $this->redirectToRoute('app_login');
+        }
+
+        $form = $this->createForm(InvitedRegistrationFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = new User();
+            $user->setEmail((string) $invitation->getEmail());
+            $user->setName($invitation->getPrenom());
+            $user->setLastName($invitation->getNom());
+            $user->setRoles(['ROLE_ENTREPRISE', 'ROLE_ENTREPRISE_USER']);
+            $user->setIsVerified(true);
+
+            /** @var string $plainPassword */
+            $plainPassword = $form->get('plainPassword')->getData();
+            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+
+            if ($invitation->getCompany()) {
+                $user->setCompany($invitation->getCompany());
+            }
+
+            // Invalide le token en le vidant
+            $invitation->setToken('used_' . $invitation->getToken());
+            $invitation->setExpiresAt(new \DateTimeImmutable('-1 second'));
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $security->login($user, 'form_login', 'main');
+
+            $this->addFlash('success', 'Votre compte a été créé avec succès. Bienvenue !');
+            return $this->redirectToRoute('app_user_dashboard');
+        }
+
+        return $this->render('security/registration/register_invited.html.twig', [
+            'form' => $form,
+            'invitation' => $invitation,
         ]);
     }
 

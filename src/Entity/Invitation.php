@@ -19,6 +19,13 @@ class Invitation
     #[ORM\Column]
     private ?\DateTimeImmutable $expiresAt = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'invitations')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Company $company = null;
+
     #[ORM\ManyToOne]
     private ?QuizTemplate $quizTemplate = null;
 
@@ -131,5 +138,34 @@ class Invitation
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
+
+        return $this;
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->expiresAt < new \DateTimeImmutable();
     }
 }

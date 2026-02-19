@@ -1,0 +1,84 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}Créer mon compte - {{ invitation.company.name }}{% endblock %}
+
+{% block body %}
+    <div class="flex min-h-screen w-full">
+        {# Left Side - Form #}
+        <div class="flex w-full flex-col justify-center px-4 py-12 lg:w-1/2 lg:px-12">
+            <div class="mx-auto w-full max-w-sm">
+
+                {% for flash_error in app.flashes('error') %}
+                    <div class="mb-4 rounded-md bg-destructive/15 p-3 text-sm text-destructive" role="alert">{{ flash_error }}</div>
+                {% endfor %}
+
+                {# Company badge #}
+                <div class="mb-6 flex items-center gap-3 p-4 bg-cyan-50 border border-cyan-200 rounded-lg">
+                    <div class="w-10 h-10 rounded-full bg-cyan-600 flex items-center justify-center flex-shrink-0">
+                        <twig:ux:icon name="tabler:building" class="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                        <p class="text-xs text-cyan-600 font-medium uppercase tracking-wide">Invitation de</p>
+                        <p class="text-sm font-bold text-cyan-900">{{ invitation.company.name }}</p>
+                    </div>
+                </div>
+
+                <twig:Card class="w-full">
+                    <twig:Card:Header>
+                        <twig:Card:Title class="text-2xl font-bold">Créer mon compte</twig:Card:Title>
+                        <twig:Card:Description>
+                            Bonjour <strong>{{ invitation.prenom }} {{ invitation.nom }}</strong>, choisissez votre mot de passe pour activer votre compte.
+                        </twig:Card:Description>
+                    </twig:Card:Header>
+                    <twig:Card:Content>
+                        {{ form_start(form, {'attr': {'class': 'space-y-4'}}) }}
+
+                            {% if not form.vars.valid %}
+                                <div class="mb-4 rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+                                    {{ form_errors(form) }}
+                                </div>
+                            {% endif %}
+
+                            {# Email en lecture seule #}
+                            <div class="grid gap-2">
+                                <label class="text-sm font-medium leading-none">Email</label>
+                                <input
+                                    type="email"
+                                    value="{{ invitation.email }}"
+                                    readonly
+                                    class="flex h-10 w-full rounded-md border border-input bg-slate-50 px-3 py-2 text-sm text-slate-500 cursor-not-allowed"
+                                />
+                                <p class="text-xs text-slate-400">L'email est défini par l'invitation.</p>
+                            </div>
+
+                            <div class="grid gap-2">
+                                <twig:Label for="{{ form.plainPassword.vars.id }}">Mot de passe</twig:Label>
+                                {{ form_widget(form.plainPassword, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'}}) }}
+                                <div class="text-[0.8rem] text-muted-foreground">
+                                    {{ form_errors(form.plainPassword) }}
+                                </div>
+                            </div>
+
+                            <twig:Button type="submit" class="w-full mt-4">Activer mon compte</twig:Button>
+                        {{ form_end(form) }}
+                    </twig:Card:Content>
+                    <twig:Card:Footer class="flex justify-center">
+                        <div class="text-sm text-muted-foreground">
+                            Déjà un compte ? <a href="{{ path('app_login') }}" class="font-medium text-primary hover:underline">Se connecter</a>
+                        </div>
+                    </twig:Card:Footer>
+                </twig:Card>
+            </div>
+        </div>
+
+        {# Right Side - Image #}
+        <div class="hidden lg:block lg:w-1/2 relative bg-muted">
+            <img
+                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop"
+                alt="Workspace"
+                class="absolute inset-0 h-full w-full object-cover"
+            />
+            <div class="absolute inset-0 bg-cyan-900/40"></div>
+        </div>
+    </div>
+{% endblock %}

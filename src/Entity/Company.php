@@ -71,10 +71,17 @@ class Company
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $Description = null;
 
+    /**
+     * @var Collection<int, Invitation>
+     */
+    #[ORM\OneToMany(targetEntity: Invitation::class, mappedBy: 'company', cascade: ['remove'])]
+    private Collection $invitations;
+
     public function __construct()
     {
         $this->Users = new ArrayCollection();
         $this->adresses = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -236,6 +243,35 @@ class Company
     public function setDescription(?string $Description): static
     {
         $this->Description = $Description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Invitation>
+     */
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(Invitation $invitation): static
+    {
+        if (!$this->invitations->contains($invitation)) {
+            $this->invitations->add($invitation);
+            $invitation->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvitation(Invitation $invitation): static
+    {
+        if ($this->invitations->removeElement($invitation)) {
+            if ($invitation->getCompany() === $this) {
+                $invitation->setCompany(null);
+            }
+        }
 
         return $this;
     }

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php bin/console doctrine:migrations:diff:*)",
+      "Bash(php bin/console doctrine:migrations:migrate:*)",
+      "Bash(php bin/console debug:router:*)",
+      "Bash(php bin/console:*)"
+    ]
+  }
+}

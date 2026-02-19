@@ -152,9 +152,10 @@
         <div class="hidden" id="users" role="tabpanel" aria-labelledby="users-tab">
              <div class="flex justify-between items-center mb-6">
                 <h3 class="text-lg font-medium text-slate-900">Utilisateurs associés</h3>
-                <button type="button" class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors text-sm font-medium flex items-center">
+                <button type="button" onclick="document.getElementById('invitationModal').classList.remove('hidden')"
+                        class="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors text-sm font-medium flex items-center">
                     <twig:ux:icon name="tabler:user-plus" class="w-4 h-4 mr-2" />
-                    Ajouter un utilisateur
+                    Inviter un utilisateur
                 </button>
             </div>
 
@@ -189,7 +190,15 @@
                                     {% endif %}
                                 </td>
                                 <td class="px-6 py-4 text-right">
-                                    <a href="#" class="font-medium text-cyan-600 hover:underline">Editer</a>
+                                    {% if company.owner and company.owner.id == user.id %}
+                                        <span class="text-xs text-slate-400 italic">Non modifiable</span>
+                                    {% else %}
+                                        <button type="button"
+                                                onclick="openEditUserModal({{ user.id }}, '{{ user.username|default(user.email)|e('js') }}', '{{ user.email|e('js') }}', '{{ 'ROLE_ENTREPRISE_ADMIN' in user.roles ? 'ROLE_ENTREPRISE_ADMIN' : 'ROLE_ENTREPRISE_USER' }}')"
+                                                class="font-medium text-cyan-600 hover:underline text-sm">
+                                            Éditer
+                                        </button>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% else %}
@@ -208,6 +217,193 @@
     
 
     {{ form_end(form) }}
+
+    {# Flash messages #}
+    {% for message in app.flashes('success') %}
+        <div class="mt-4 p-4 text-sm text-green-800 rounded-lg bg-green-50 border border-green-200" role="alert">
+            <span class="font-medium">✓</span> {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="mt-4 p-4 text-sm text-red-800 rounded-lg bg-red-50 border border-red-200" role="alert">
+            <span class="font-medium">✗</span> {{ message }}
+        </div>
+    {% endfor %}
+
+    {# Modal Invitation #}
+    <div id="invitationModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-100 flex items-center justify-center">
+                        <twig:ux:icon name="tabler:user-plus" class="w-4 h-4 text-cyan-600" />
+                    </div>
+                    <h3 class="text-base font-semibold text-slate-900">Inviter un utilisateur</h3>
+                </div>
+                <button type="button" onclick="document.getElementById('invitationModal').classList.add('hidden')"
+                        class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <twig:ux:icon name="tabler:x" class="w-5 h-5" />
+                </button>
+            </div>
+
+            <div class="px-6 py-5">
+                <p class="text-sm text-slate-500 mb-5">
+                    Un email sera envoyé au candidat avec un lien pour créer son compte et rejoindre <strong>{{ company.name }}</strong>.
+                </p>
+
+                {{ form_start(invitationForm, {'attr': {'class': 'space-y-4'}}) }}
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label for="{{ invitationForm.prenom.vars.id }}" class="text-sm font-medium text-slate-700">Prénom</label>
+                            {{ form_widget(invitationForm.prenom, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500', 'placeholder': 'Jean'}}) }}
+                            <div class="text-xs text-red-500">{{ form_errors(invitationForm.prenom) }}</div>
+                        </div>
+                        <div class="space-y-1">
+                            <label for="{{ invitationForm.nom.vars.id }}" class="text-sm font-medium text-slate-700">Nom</label>
+                            {{ form_widget(invitationForm.nom, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500', 'placeholder': 'Dupont'}}) }}
+                            <div class="text-xs text-red-500">{{ form_errors(invitationForm.nom) }}</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="{{ invitationForm.email.vars.id }}" class="text-sm font-medium text-slate-700">Adresse email</label>
+                        {{ form_widget(invitationForm.email, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500', 'placeholder': 'jean.dupont@exemple.com'}}) }}
+                        <div class="text-xs text-red-500">{{ form_errors(invitationForm.email) }}</div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-500 flex items-start gap-2">
+                        <twig:ux:icon name="tabler:info-circle" class="w-4 h-4 flex-shrink-0 mt-0.5 text-slate-400" />
+                        <span>L'utilisateur sera créé avec les rôles <strong>Entreprise</strong> et <strong>Utilisateur Entreprise</strong>. Le lien expire dans 7 jours.</span>
+                    </div>
+
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" onclick="document.getElementById('invitationModal').classList.add('hidden')"
+                                class="flex-1 px-4 py-2 border border-slate-200 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                            Annuler
+                        </button>
+                        <button type="submit"
+                                class="flex-1 px-4 py-2 bg-cyan-600 text-white rounded-md text-sm font-medium hover:bg-cyan-700 transition-colors flex items-center justify-center gap-2">
+                            <twig:ux:icon name="tabler:send" class="w-4 h-4" />
+                            Envoyer l'invitation
+                        </button>
+                    </div>
+
+                {{ form_end(invitationForm) }}
+            </div>
+        </div>
+    </div>
+
+    {# Modal Édition Utilisateur #}
+    <div id="editUserModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                        <twig:ux:icon name="tabler:user-edit" class="w-4 h-4 text-blue-600" />
+                    </div>
+                    <h3 class="text-base font-semibold text-slate-900">Modifier l'utilisateur</h3>
+                </div>
+                <button type="button" onclick="closeEditUserModal()"
+                        class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <twig:ux:icon name="tabler:x" class="w-5 h-5" />
+                </button>
+            </div>
+
+            <div class="px-6 py-5">
+                {# Infos utilisateur (lecture seule) #}
+                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg mb-5">
+                    <div class="w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center flex-shrink-0">
+                        <span id="editUserInitial" class="text-sm font-bold text-slate-700"></span>
+                    </div>
+                    <div class="min-w-0">
+                        <p id="editUserName" class="text-sm font-semibold text-slate-900 truncate"></p>
+                        <p id="editUserEmail" class="text-xs text-slate-500 truncate"></p>
+                    </div>
+                </div>
+
+                <form id="editUserForm" method="POST" action="" class="space-y-4">
+                    <input type="hidden" name="_token" value="{{ csrf_token('edit_user') }}">
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-slate-700">Rôle dans l'entreprise</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="relative flex cursor-pointer rounded-lg border border-slate-200 p-4 hover:border-blue-300 transition-colors has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
+                                <input type="radio" name="role" value="ROLE_ENTREPRISE_USER" id="role_user" class="sr-only" />
+                                <div class="flex items-start gap-3">
+                                    <div class="mt-0.5 w-4 h-4 rounded-full border-2 border-slate-300 flex items-center justify-center flex-shrink-0" id="radio_user_indicator">
+                                        <div class="w-2 h-2 rounded-full bg-blue-500 hidden" id="radio_user_dot"></div>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-slate-900">Utilisateur</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">Accès standard</p>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="relative flex cursor-pointer rounded-lg border border-slate-200 p-4 hover:border-blue-300 transition-colors has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
+                                <input type="radio" name="role" value="ROLE_ENTREPRISE_ADMIN" id="role_admin" class="sr-only" />
+                                <div class="flex items-start gap-3">
+                                    <div class="mt-0.5 w-4 h-4 rounded-full border-2 border-slate-300 flex items-center justify-center flex-shrink-0" id="radio_admin_indicator">
+                                        <div class="w-2 h-2 rounded-full bg-blue-500 hidden" id="radio_admin_dot"></div>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-slate-900">Admin</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">Gestion étendue</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" onclick="closeEditUserModal()"
+                                class="flex-1 px-4 py-2 border border-slate-200 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                            Annuler
+                        </button>
+                        <button type="submit"
+                                class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                            <twig:ux:icon name="tabler:check" class="w-4 h-4" />
+                            Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openEditUserModal(userId, userName, userEmail, currentRole) {
+            document.getElementById('editUserName').textContent = userName;
+            document.getElementById('editUserEmail').textContent = userEmail;
+            document.getElementById('editUserInitial').textContent = userName.charAt(0).toUpperCase();
+
+            const form = document.getElementById('editUserForm');
+            form.action = '/business/user/' + userId + '/edit';
+
+            const radioUser = document.getElementById('role_user');
+            const radioAdmin = document.getElementById('role_admin');
+
+            if (currentRole === 'ROLE_ENTREPRISE_ADMIN') {
+                radioAdmin.checked = true;
+            } else {
+                radioUser.checked = true;
+            }
+
+            document.getElementById('editUserModal').classList.remove('hidden');
+        }
+
+        function closeEditUserModal() {
+            document.getElementById('editUserModal').classList.add('hidden');
+        }
+
+        document.getElementById('editUserModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditUserModal();
+        });
+
+        document.getElementById('invitationModal').addEventListener('click', function(e) {
+            if (e.target === this) document.getElementById('invitationModal').classList.add('hidden');
+        });
+    </script>
 
     <script>
         function changeTab(tabId) {
