@@ -164,7 +164,7 @@ final class BusinessHomeController extends AbstractController
             $this->addFlash('error', "Le formulaire d'invitation est invalide.");
         }
 
-        return $this->redirectToRoute('business_profile');
+        return $this->redirectToRoute('business_profile', ['tab' => 'users']);
     }
 
     /**
@@ -180,7 +180,7 @@ final class BusinessHomeController extends AbstractController
     ): Response {
         if (!$csrfTokenManager->isTokenValid(new CsrfToken('edit_user', $request->request->get('_token')))) {
             $this->addFlash('error', 'Token CSRF invalide.');
-            return $this->redirectToRoute('business_profile');
+            return $this->redirectToRoute('business_profile', ['tab' => 'users']);
         }
         /** @var \App\Entity\User $currentUser */
         $currentUser = $this->getUser();
@@ -198,7 +198,7 @@ final class BusinessHomeController extends AbstractController
 
         if ($company->getOwner() && $company->getOwner()->getId() === $user->getId()) {
             $this->addFlash('error', 'Impossible de modifier le rôle du propriétaire.');
-            return $this->redirectToRoute('business_profile');
+            return $this->redirectToRoute('business_profile', ['tab' => 'users']);
         }
 
         $newRole = $request->request->get('role');
@@ -206,7 +206,7 @@ final class BusinessHomeController extends AbstractController
 
         if (!in_array($newRole, $allowedRoles, true)) {
             $this->addFlash('error', 'Rôle invalide.');
-            return $this->redirectToRoute('business_profile');
+            return $this->redirectToRoute('business_profile', ['tab' => 'users']);
         }
 
         $user->setRoles(['ROLE_ENTREPRISE', $newRole]);
@@ -217,7 +217,7 @@ final class BusinessHomeController extends AbstractController
             $user->getUsername() ?? $user->getEmail()
         ));
 
-        return $this->redirectToRoute('business_profile');
+        return $this->redirectToRoute('business_profile', ['tab' => 'users']);
     }
 
     /**

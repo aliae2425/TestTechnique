@@ -407,26 +407,33 @@
 
     <script>
         function changeTab(tabId) {
-            // Hide all tab content
             document.querySelectorAll('[role="tabpanel"]').forEach(el => {
                 el.classList.add('hidden');
             });
-            
-            // Show selected tab content
             document.getElementById(tabId).classList.remove('hidden');
-            
-            // Update tab buttons state
             document.querySelectorAll('[role="tab"]').forEach(el => {
                 el.classList.remove('text-cyan-600', 'border-cyan-600');
                 el.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
                 el.setAttribute('aria-selected', 'false');
             });
-            
-            // Highlight selected tab button
             const activeTab = document.getElementById(tabId + '-tab');
             activeTab.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
             activeTab.classList.add('text-cyan-600', 'border-cyan-600');
             activeTab.setAttribute('aria-selected', 'true');
+
+            const url = new URL(window.location);
+            url.searchParams.set('tab', tabId);
+            history.replaceState(null, '', url);
         }
+
+        // Restore active tab from URL param on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const tab = params.get('tab');
+            const validTabs = ['general', 'description', 'users'];
+            if (tab && validTabs.includes(tab)) {
+                changeTab(tab);
+            }
+        });
     </script>
 {% endblock %}
