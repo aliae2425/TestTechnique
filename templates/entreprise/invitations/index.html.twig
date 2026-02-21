@@ -1,0 +1,187 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}Historique des candidatures — {{ company.name }}{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-50/50 pt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        {# Header #}
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900">Historique des candidatures</h1>
+                <p class="text-sm text-slate-500 mt-1">{{ company.name }} · {{ invitations|length }} invitation{{ invitations|length > 1 ? 's' : '' }}</p>
+            </div>
+            <button type="button" onclick="openInviteModal()"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-cyan-600 text-white text-sm font-semibold rounded-xl hover:bg-cyan-700 transition-colors shadow-sm">
+                <twig:ux:icon name="tabler:send" class="w-4 h-4" />
+                Lancer un test
+            </button>
+        </div>
+
+        {# Flash messages #}
+        {% for message in app.flashes('success') %}
+            <div class="mb-6 flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-xl text-sm text-green-800">
+                <twig:ux:icon name="tabler:circle-check" class="w-5 h-5 flex-shrink-0 text-green-600" />
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="mb-6 flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800">
+                <twig:ux:icon name="tabler:alert-circle" class="w-5 h-5 flex-shrink-0 text-red-500" />
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {# Table #}
+        {% if invitations is empty %}
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-16 text-center">
+                <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                    <twig:ux:icon name="tabler:inbox" class="w-8 h-8 text-slate-400" />
+                </div>
+                <h3 class="text-lg font-semibold text-slate-700 mb-1">Aucune invitation</h3>
+                <p class="text-sm text-slate-500 mb-6">Lancez votre premier test pour commencer à recevoir des candidatures.</p>
+                <button type="button" onclick="openInviteModal()"
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-600 text-white text-sm font-semibold rounded-xl hover:bg-cyan-700 transition-colors">
+                    <twig:ux:icon name="tabler:send" class="w-4 h-4" />
+                    Lancer un test
+                </button>
+            </div>
+        {% else %}
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-100 bg-slate-50/70">
+                            <th class="text-left px-5 py-3.5 font-semibold text-slate-600">Quiz</th>
+                            <th class="text-left px-5 py-3.5 font-semibold text-slate-600">Type</th>
+                            <th class="text-left px-5 py-3.5 font-semibold text-slate-600">Destinataire</th>
+                            <th class="text-left px-5 py-3.5 font-semibold text-slate-600">Statut</th>
+                            <th class="text-left px-5 py-3.5 font-semibold text-slate-600">Créée le</th>
+                            <th class="text-left px-5 py-3.5 font-semibold text-slate-600">Expiration</th>
+                            <th class="text-right px-5 py-3.5 font-semibold text-slate-600">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for invitation in invitations %}
+                            {% set isExpired = invitation.isExpired() %}
+                            {% set isUsed = invitation.token starts with 'used_' %}
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+
+                                {# Quiz #}
+                                <td class="px-5 py-4">
+                                    {% if invitation.quizTemplate %}
+                                        <p class="font-medium text-slate-800">{{ invitation.quizTemplate.titre }}</p>
+                                        <p class="text-xs text-slate-400 mt-0.5">{{ invitation.quizTemplate.type }}</p>
+                                    {% else %}
+                                        <span class="text-slate-400 italic">Aucun quiz</span>
+                                    {% endif %}
+                                </td>
+
+                                {# Type badge #}
+                                <td class="px-5 py-4">
+                                    {% if invitation.type == 'link' %}
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-violet-100 text-violet-700">
+                                            <twig:ux:icon name="tabler:link" class="w-3 h-3" />
+                                            Lien
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-cyan-100 text-cyan-700">
+                                            <twig:ux:icon name="tabler:mail" class="w-3 h-3" />
+                                            Email
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                {# Destinataire #}
+                                <td class="px-5 py-4">
+                                    {% if invitation.type == 'link' %}
+                                        <span class="text-slate-400 text-xs italic">Multi-usage</span>
+                                    {% elseif invitation.nom or invitation.prenom %}
+                                        <p class="font-medium text-slate-700">{{ invitation.prenom }} {{ invitation.nom }}</p>
+                                        <p class="text-xs text-slate-400">{{ invitation.email }}</p>
+                                    {% else %}
+                                        <span class="text-slate-400 italic">—</span>
+                                    {% endif %}
+                                </td>
+
+                                {# Statut #}
+                                <td class="px-5 py-4">
+                                    {% if isUsed %}
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                            <twig:ux:icon name="tabler:circle-check" class="w-3 h-3" />
+                                            Utilisé
+                                        </span>
+                                    {% elseif isExpired %}
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500">
+                                            <twig:ux:icon name="tabler:clock-off" class="w-3 h-3" />
+                                            Expiré
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+                                            <twig:ux:icon name="tabler:clock" class="w-3 h-3" />
+                                            En attente
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                {# Créée le #}
+                                <td class="px-5 py-4 text-slate-500 text-xs">
+                                    {{ invitation.createdAt|date('d/m/Y') }}<br>
+                                    <span class="text-slate-400">{{ invitation.createdAt|date('H:i') }}</span>
+                                </td>
+
+                                {# Expiration #}
+                                <td class="px-5 py-4 text-xs {% if isExpired %}text-red-400{% else %}text-slate-500{% endif %}">
+                                    {{ invitation.expiresAt|date('d/m/Y') }}<br>
+                                    <span class="{% if isExpired %}text-red-400{% else %}text-slate-400{% endif %}">{{ invitation.expiresAt|date('H:i') }}</span>
+                                </td>
+
+                                {# Actions #}
+                                <td class="px-5 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        {# Copier le lien pour les invitations type lien #}
+                                        {% if invitation.type == 'link' and not isExpired and not isUsed %}
+                                            {% set invitationUrl = url('app_register_invitation', {token: invitation.token}) %}
+                                            <button type="button"
+                                                    onclick="copyText('{{ invitationUrl }}')"
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-violet-700 border border-violet-200 rounded-lg hover:bg-violet-50 transition-colors">
+                                                <twig:ux:icon name="tabler:copy" class="w-3.5 h-3.5" />
+                                                Copier
+                                            </button>
+                                        {% endif %}
+
+                                        {# Supprimer #}
+                                        <form method="POST" action="{{ path('business_invitation_delete', {id: invitation.id}) }}"
+                                              onsubmit="return confirm('Supprimer cette invitation ?')">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete_invitation_' ~ invitation.id) }}">
+                                            <button type="submit"
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+                                                <twig:ux:icon name="tabler:trash" class="w-3.5 h-3.5" />
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function copyText(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = event.currentTarget;
+        btn.innerHTML = '✓ Copié !';
+        btn.classList.add('text-green-700', 'border-green-300', 'bg-green-50');
+        setTimeout(() => {
+            btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copier';
+            btn.classList.remove('text-green-700', 'border-green-300', 'bg-green-50');
+        }, 2000);
+    });
+}
+</script>
+{% endblock %}

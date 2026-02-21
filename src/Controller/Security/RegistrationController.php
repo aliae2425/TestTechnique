@@ -5,6 +5,7 @@ namespace App\Controller\Security;
 use App\Entity\Company;
 use App\Entity\User;
 use App\Form\InvitedRegistrationFormType;
+use App\Form\InvitedRegistrationWithNameType;
 use App\Form\RegistrationFormType;
 use App\Repository\InvitationRepository;
 use App\Security\EmailVerifier;
@@ -174,14 +175,29 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $form = $this->createForm(InvitedRegistrationFormType::class);
+        $isLinkType = $invitation->getType() === 'link';
+
+        // Lien multi-usage : formulaire avec nom/prénom + mot de passe
+        // Email nominatif : formulaire avec mot de passe seulement (nom pré-rempli depuis l'invitation)
+        $form = $isLinkType
+            ? $this->createForm(InvitedRegistrationWithNameType::class)
+            : $this->createForm(InvitedRegistrationFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = new User();
-            $user->setEmail((string) $invitation->getEmail());
-            $user->setName($invitation->getPrenom());
-            $user->setLastName($invitation->getNom());
+
+            if ($isLinkType) {
+                // Lien : l'utilisateur renseigne son propre nom/prénom
+                $user->setName($form->get('prenom')->getData());
+                $user->setLastName($form->get('nom')->getData());
+            } else {
+                // Email : nom pré-rempli depuis l'invitation
+                $user->setEmail((string) $invitation->getEmail());
+                $user->setName($invitation->getPrenom());
+                $user->setLastName($invitation->getNom());
+            }
+
             $user->setRoles(['ROLE_ENTREPRISE', 'ROLE_ENTREPRISE_USER']);
             $user->setIsVerified(true);
 
@@ -189,13 +205,20 @@ class RegistrationController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
+            if ($isLinkType) {
+                $user->setEmail($form->get('email')->getData());
+            }
+
             if ($invitation->getCompany()) {
                 $user->setCompany($invitation->getCompany());
             }
 
-            // Invalide le token en le vidant
-            $invitation->setToken('used_' . $invitation->getToken());
-            $invitation->setExpiresAt(new \DateTimeImmutable('-1 second'));
+            if (!$isLinkType) {
+                // Invalide le token pour les invitations email (usage unique)
+                $invitation->setToken('used_' . $invitation->getToken());
+                $invitation->setExpiresAt(new \DateTimeImmutable('-1 second'));
+            }
+            // Pour les liens (multi-usage), on ne touche pas au token
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -209,6 +232,7 @@ class RegistrationController extends AbstractController
         return $this->render('security/registration/register_invited.html.twig', [
             'form' => $form,
             'invitation' => $invitation,
+            'isLinkType' => $isLinkType,
         ]);
     }
 

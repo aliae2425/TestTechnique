@@ -1,6 +1,6 @@
 {% extends 'base/base.html.twig' %}
 
-{% block title %}Créer mon compte - {{ invitation.company.name }}{% endblock %}
+{% block title %}Créer mon compte{% if invitation.company %} — {{ invitation.company.name }}{% endif %}{% endblock %}
 
 {% block body %}
     <div class="flex min-h-screen w-full">
@@ -13,7 +13,8 @@
                 {% endfor %}
 
                 {# Company badge #}
-                <div class="mb-6 flex items-center gap-3 p-4 bg-cyan-50 border border-cyan-200 rounded-lg">
+                {% if invitation.company %}
+                <div class="mb-4 flex items-center gap-3 p-4 bg-cyan-50 border border-cyan-200 rounded-lg">
                     <div class="w-10 h-10 rounded-full bg-cyan-600 flex items-center justify-center flex-shrink-0">
                         <twig:ux:icon name="tabler:building" class="w-5 h-5 text-white" />
                     </div>
@@ -22,12 +23,31 @@
                         <p class="text-sm font-bold text-cyan-900">{{ invitation.company.name }}</p>
                     </div>
                 </div>
+                {% endif %}
+
+                {# Quiz badge #}
+                {% if invitation.quizTemplate %}
+                <div class="mb-6 flex items-center gap-3 p-4 bg-violet-50 border border-violet-200 rounded-lg">
+                    <div class="w-10 h-10 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0">
+                        <twig:ux:icon name="tabler:clipboard-list" class="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                        <p class="text-xs text-violet-600 font-medium uppercase tracking-wide">Quiz associé</p>
+                        <p class="text-sm font-bold text-violet-900">{{ invitation.quizTemplate.titre }}</p>
+                        <p class="text-xs text-violet-500">{{ invitation.quizTemplate.type }}</p>
+                    </div>
+                </div>
+                {% endif %}
 
                 <twig:Card class="w-full">
                     <twig:Card:Header>
                         <twig:Card:Title class="text-2xl font-bold">Créer mon compte</twig:Card:Title>
                         <twig:Card:Description>
-                            Bonjour <strong>{{ invitation.prenom }} {{ invitation.nom }}</strong>, choisissez votre mot de passe pour activer votre compte.
+                            {% if isLinkType %}
+                                Renseignez vos informations pour rejoindre la plateforme et passer le test.
+                            {% else %}
+                                Bonjour <strong>{{ invitation.prenom }} {{ invitation.nom }}</strong>, choisissez votre mot de passe pour activer votre compte.
+                            {% endif %}
                         </twig:Card:Description>
                     </twig:Card:Header>
                     <twig:Card:Content>
@@ -39,17 +59,38 @@
                                 </div>
                             {% endif %}
 
-                            {# Email en lecture seule #}
-                            <div class="grid gap-2">
-                                <label class="text-sm font-medium leading-none">Email</label>
-                                <input
-                                    type="email"
-                                    value="{{ invitation.email }}"
-                                    readonly
-                                    class="flex h-10 w-full rounded-md border border-input bg-slate-50 px-3 py-2 text-sm text-slate-500 cursor-not-allowed"
-                                />
-                                <p class="text-xs text-slate-400">L'email est défini par l'invitation.</p>
-                            </div>
+                            {% if isLinkType %}
+                                {# Lien multi-usage : l'utilisateur saisit son email, prénom, nom #}
+                                <div class="grid gap-2">
+                                    <twig:Label for="{{ form.email.vars.id }}">Adresse email</twig:Label>
+                                    {{ form_widget(form.email, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2', 'placeholder': 'votre@email.com'}}) }}
+                                    <div class="text-[0.8rem] text-muted-foreground">{{ form_errors(form.email) }}</div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="grid gap-2">
+                                        <twig:Label for="{{ form.prenom.vars.id }}">Prénom</twig:Label>
+                                        {{ form_widget(form.prenom, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'}}) }}
+                                        <div class="text-[0.8rem] text-muted-foreground">{{ form_errors(form.prenom) }}</div>
+                                    </div>
+                                    <div class="grid gap-2">
+                                        <twig:Label for="{{ form.nom.vars.id }}">Nom</twig:Label>
+                                        {{ form_widget(form.nom, {'attr': {'class': 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'}}) }}
+                                        <div class="text-[0.8rem] text-muted-foreground">{{ form_errors(form.nom) }}</div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {# Email nominatif : email en lecture seule #}
+                                <div class="grid gap-2">
+                                    <label class="text-sm font-medium leading-none">Email</label>
+                                    <input
+                                        type="email"
+                                        value="{{ invitation.email }}"
+                                        readonly
+                                        class="flex h-10 w-full rounded-md border border-input bg-slate-50 px-3 py-2 text-sm text-slate-500 cursor-not-allowed"
+                                    />
+                                    <p class="text-xs text-slate-400">L'email est défini par l'invitation.</p>
+                                </div>
+                            {% endif %}
 
                             <div class="grid gap-2">
                                 <twig:Label for="{{ form.plainPassword.vars.id }}">Mot de passe</twig:Label>

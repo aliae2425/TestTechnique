@@ -28,5 +28,9 @@
         {% endblock %}
 
         </div>
+
+        {% if app.user and is_granted('ROLE_ENTREPRISE') %}
+            {{ render(controller('App\\Controller\\Business\\InvitationController::modal')) }}
+        {% endif %}
     </body>
 </html>

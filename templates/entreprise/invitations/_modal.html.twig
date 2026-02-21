@@ -1,0 +1,283 @@
+{# Modal "Lancer un test" — inclus dans base.html.twig via render(controller(...)) pour ROLE_ENTREPRISE #}
+<div id="inviteModal"
+     class="fixed inset-0 z-[9999] hidden"
+     aria-modal="true"
+     role="dialog">
+
+    {# Backdrop #}
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeInviteModal()"></div>
+
+    {# Panel #}
+    <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+
+            {# Header #}
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-cyan-100 flex items-center justify-center">
+                        <twig:ux:icon name="tabler:send" class="w-5 h-5 text-cyan-600" />
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Lancer un test</h2>
+                        <p class="text-xs text-slate-500">Sélectionnez un quiz puis choisissez le mode d'envoi</p>
+                    </div>
+                </div>
+                <button onclick="closeInviteModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-700 transition-colors">
+                    <twig:ux:icon name="tabler:x" class="w-5 h-5" />
+                </button>
+            </div>
+
+            {# Scrollable body #}
+            <div class="overflow-y-auto flex-1 px-6 py-5 space-y-6">
+
+                {# Step 1: Quiz selection #}
+                <div>
+                    <p class="text-sm font-semibold text-slate-700 mb-3">1. Choisir un quiz</p>
+                    {% if quizTemplates is empty %}
+                        <div class="text-center py-8 text-slate-400 text-sm">
+                            <twig:ux:icon name="tabler:clipboard-x" class="w-10 h-10 mx-auto mb-2 opacity-40" />
+                            Aucun quiz disponible pour le moment.
+                        </div>
+                    {% else %}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="quizGrid">
+                            {% for quiz in quizTemplates %}
+                                <button type="button"
+                                        onclick="selectQuiz({{ quiz.id }}, '{{ quiz.titre|e('js') }}')"
+                                        data-quiz-id="{{ quiz.id }}"
+                                        class="quiz-card text-left p-4 rounded-xl border-2 border-slate-200 hover:border-cyan-300 hover:bg-cyan-50/50 transition-all group">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-slate-100 group-[.selected]:bg-cyan-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <twig:ux:icon name="tabler:clipboard-list" class="w-4 h-4 text-slate-500 group-[.selected]:text-cyan-600" />
+                                        </div>
+                                        <div class="min-w-0">
+                                            <p class="font-semibold text-sm text-slate-800 truncate">{{ quiz.titre }}</p>
+                                            <p class="text-xs text-slate-500 mt-0.5">{{ quiz.type }} · {{ quiz.mode }}</p>
+                                            {% if quiz.timeLimit %}
+                                                <span class="inline-flex items-center gap-1 mt-1 text-xs text-slate-400">
+                                                    <twig:ux:icon name="tabler:clock" class="w-3 h-3" />
+                                                    {{ quiz.timeLimit }} min
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </button>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Step 2: Mode tabs #}
+                <div id="inviteModeTabs" class="{% if quizTemplates is empty %}opacity-40 pointer-events-none{% endif %}">
+                    <p class="text-sm font-semibold text-slate-700 mb-3">2. Mode d'envoi</p>
+
+                    {# Tab buttons #}
+                    <div class="flex gap-2 mb-4 p-1 bg-slate-100 rounded-xl w-fit">
+                        <button type="button" onclick="switchInviteTab('email')" id="tabEmailBtn"
+                                class="invite-tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-white text-slate-900 shadow-sm">
+                            <twig:ux:icon name="tabler:mail" class="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
+                            Par email
+                        </button>
+                        <button type="button" onclick="switchInviteTab('link')" id="tabLinkBtn"
+                                class="invite-tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-500 hover:text-slate-700">
+                            <twig:ux:icon name="tabler:link" class="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
+                            Générer un lien
+                        </button>
+                    </div>
+
+                    {# Tab: Email #}
+                    <div id="tabEmailContent">
+                        {{ form_start(emailForm, {'attr': {'class': 'space-y-4', 'id': 'emailInviteForm'}}) }}
+                            {# Hidden quiz id field #}
+                            <input type="hidden" name="invitation_email[quizTemplate]" id="emailQuizTemplateInput" value="">
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1.5">Prénom *</label>
+                                    {{ form_widget(emailForm.prenom, {'attr': {'class': 'w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent', 'placeholder': 'Jean'}}) }}
+                                    {{ form_errors(emailForm.prenom) }}
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-700 mb-1.5">Nom *</label>
+                                    {{ form_widget(emailForm.nom, {'attr': {'class': 'w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent', 'placeholder': 'Dupont'}}) }}
+                                    {{ form_errors(emailForm.nom) }}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1.5">Adresse email *</label>
+                                {{ form_widget(emailForm.email, {'attr': {'class': 'w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent', 'placeholder': 'candidat@exemple.com'}}) }}
+                                {{ form_errors(emailForm.email) }}
+                            </div>
+
+                            {# Hidden quizTemplate field from the form (we override with JS) #}
+                            <div class="hidden">{{ form_widget(emailForm.quizTemplate) }}</div>
+
+                            <button type="submit" id="emailSubmitBtn"
+                                    class="w-full py-2.5 px-4 bg-cyan-600 text-white text-sm font-semibold rounded-lg hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2">
+                                <twig:ux:icon name="tabler:send" class="w-4 h-4" />
+                                Envoyer l'invitation
+                            </button>
+                        {{ form_end(emailForm) }}
+                    </div>
+
+                    {# Tab: Link #}
+                    <div id="tabLinkContent" class="hidden">
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+                            <strong>Lien multi-usage</strong> — Valable 24h. N'importe qui disposant de ce lien peut s'inscrire et passer le quiz sélectionné.
+                        </div>
+
+                        {{ form_start(linkForm, {'attr': {'class': 'space-y-4', 'id': 'linkInviteForm', 'onsubmit': 'return false;'}}) }}
+                            {# Hidden quiz id field #}
+                            <div class="hidden">{{ form_widget(linkForm.quizTemplate) }}</div>
+                            <input type="hidden" name="invitation_link[quizTemplate]" id="linkQuizTemplateInput" value="">
+
+                            {# Generated link display #}
+                            <div id="generatedLinkBox" class="hidden">
+                                <label class="block text-xs font-medium text-slate-700 mb-1.5">Lien généré</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="generatedLinkInput" readonly
+                                           class="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 font-mono truncate">
+                                    <button type="button" onclick="copyInviteLink()" id="copyLinkBtn"
+                                            class="px-3 py-2 text-sm font-medium text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1.5">
+                                        <twig:ux:icon name="tabler:copy" class="w-4 h-4" />
+                                        Copier
+                                    </button>
+                                </div>
+                                <p id="linkExpiryText" class="text-xs text-slate-500 mt-1.5"></p>
+                            </div>
+
+                            <button type="button" onclick="generateInviteLink()" id="generateLinkBtn"
+                                    class="w-full py-2.5 px-4 bg-violet-600 text-white text-sm font-semibold rounded-lg hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2">
+                                <twig:ux:icon name="tabler:link" class="w-4 h-4" />
+                                Générer le lien
+                            </button>
+                        {{ form_end(linkForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openInviteModal() {
+        document.getElementById('inviteModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeInviteModal() {
+        document.getElementById('inviteModal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeInviteModal();
+    });
+
+    function selectQuiz(id, title) {
+        // Update hidden fields in both forms
+        document.getElementById('emailQuizTemplateInput').value = id;
+        document.getElementById('linkQuizTemplateInput').value = id;
+
+        // Also update the Symfony-generated select fields
+        const emailSelect = document.querySelector('#emailInviteForm select[name="invitation_email[quizTemplate]"]');
+        const linkSelect = document.querySelector('#linkInviteForm select[name="invitation_link[quizTemplate]"]');
+        if (emailSelect) emailSelect.value = id;
+        if (linkSelect) linkSelect.value = id;
+
+        // Visual feedback on cards
+        document.querySelectorAll('.quiz-card').forEach(card => {
+            card.classList.remove('selected', 'border-cyan-500', 'bg-cyan-50');
+            card.classList.add('border-slate-200');
+        });
+        const selected = document.querySelector(`.quiz-card[data-quiz-id="${id}"]`);
+        if (selected) {
+            selected.classList.add('selected', 'border-cyan-500', 'bg-cyan-50');
+            selected.classList.remove('border-slate-200');
+        }
+
+        // Reset generated link
+        document.getElementById('generatedLinkBox').classList.add('hidden');
+        document.getElementById('generatedLinkInput').value = '';
+    }
+
+    function switchInviteTab(tab) {
+        const emailContent = document.getElementById('tabEmailContent');
+        const linkContent = document.getElementById('tabLinkContent');
+        const emailBtn = document.getElementById('tabEmailBtn');
+        const linkBtn = document.getElementById('tabLinkBtn');
+
+        if (tab === 'email') {
+            emailContent.classList.remove('hidden');
+            linkContent.classList.add('hidden');
+            emailBtn.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+            emailBtn.classList.remove('text-slate-500');
+            linkBtn.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+            linkBtn.classList.add('text-slate-500');
+        } else {
+            linkContent.classList.remove('hidden');
+            emailContent.classList.add('hidden');
+            linkBtn.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+            linkBtn.classList.remove('text-slate-500');
+            emailBtn.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+            emailBtn.classList.add('text-slate-500');
+        }
+    }
+
+    function generateInviteLink() {
+        const quizId = document.getElementById('linkQuizTemplateInput').value;
+        if (!quizId) {
+            alert('Veuillez sélectionner un quiz avant de générer un lien.');
+            return;
+        }
+
+        const btn = document.getElementById('generateLinkBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<svg class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Génération...';
+
+        // Build form data for the link form
+        const formData = new FormData();
+        formData.append('invitation_link[quizTemplate]', quizId);
+        // Add CSRF token from the form
+        const csrfInput = document.querySelector('#linkInviteForm input[name="invitation_link[_token]"]');
+        if (csrfInput) formData.append('invitation_link[_token]', csrfInput.value);
+
+        fetch('{{ path("business_invitation_generate_link") }}', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.url) {
+                document.getElementById('generatedLinkInput').value = data.url;
+                document.getElementById('linkExpiryText').textContent = `⏳ Expire le ${data.expiresAt} · Quiz : ${data.quiz}`;
+                document.getElementById('generatedLinkBox').classList.remove('hidden');
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Générer un nouveau lien';
+            } else {
+                alert(data.error || 'Une erreur est survenue.');
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Générer le lien';
+            }
+        })
+        .catch(() => {
+            alert('Erreur réseau. Veuillez réessayer.');
+            btn.innerHTML = 'Générer le lien';
+        })
+        .finally(() => {
+            btn.disabled = false;
+        });
+    }
+
+    function copyInviteLink() {
+        const input = document.getElementById('generatedLinkInput');
+        navigator.clipboard.writeText(input.value).then(() => {
+            const btn = document.getElementById('copyLinkBtn');
+            btn.textContent = '✓ Copié !';
+            btn.classList.add('text-green-600', 'border-green-300', 'bg-green-50');
+            setTimeout(() => {
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copier';
+                btn.classList.remove('text-green-600', 'border-green-300', 'bg-green-50');
+            }, 2000);
+        });
+    }
+</script>

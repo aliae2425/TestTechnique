@@ -32,10 +32,13 @@ class Invitation
     #[ORM\OneToOne(mappedBy: 'invitation', cascade: ['persist', 'remove'])]
     private ?QuizSession $quizSession = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 10, options: ['default' => 'email'])]
+    private string $type = 'email';
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -109,7 +112,7 @@ class Invitation
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): static
     {
         $this->nom = $nom;
 
@@ -121,9 +124,21 @@ class Invitation
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPrenom(?string $prenom): static
     {
         $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

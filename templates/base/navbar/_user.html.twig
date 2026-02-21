@@ -53,21 +53,21 @@
             {% if is_granted('ROLE_ENTREPRISE') %}
             <div class="h-px bg-slate-100 mx-2 my-1"></div>
             <div class="p-1">
-                <a href="#" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-cyan-50 hover:text-cyan-700 transition-colors">
+                <a href="{{ path('business_profile') }}" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-cyan-50 hover:text-cyan-700 transition-colors">
                     <twig:ux:icon name="tabler:adjustments-horizontal" class="w-4 h-4" />
-                    Gerer vos tests
+                    Gérer mes tests
                 </a>
             </div>
             <div class="p-1">
-                <a href="#" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-cyan-50 hover:text-cyan-700 transition-colors">
+                <button type="button" onclick="openInviteModal()" class="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-cyan-700 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors">
                     <twig:ux:icon name="tabler:send" class="w-4 h-4" />
                     Lancer un test
-                </a>
+                </button>
             </div>
             <div class="p-1">
-                <a href="#" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-cyan-50 hover:text-cyan-700 transition-colors">
+                <a href="{{ path('business_invitation_index') }}" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-cyan-50 hover:text-cyan-700 transition-colors">
                     <twig:ux:icon name="tabler:list-tree" class="w-4 h-4" />
-                    Historique des Candidatures
+                    Historique des candidatures
                 </a>
             </div>
             <div class="h-px bg-slate-100 mx-2 my-1"></div>
