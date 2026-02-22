@@ -175,6 +175,11 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        // Les invitations quiz vont vers la landing page quiz, pas vers l'inscription
+        if ($invitation->getPurpose() === 'quiz') {
+            return $this->redirectToRoute('quiz_invitation_landing', ['token' => $token]);
+        }
+
         $isLinkType = $invitation->getType() === 'link';
 
         // Lien multi-usage : formulaire avec nom/prénom + mot de passe

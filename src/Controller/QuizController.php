@@ -41,10 +41,18 @@ final class QuizController extends AbstractController
             return $this->handleQuizSubmission($request, $template, $questionRepository, $quizSessionRepository, $entityManager);
         }
 
-        // Initialize Session on Start (GET) to track duration
-        $session = $this->createQuizSession($template);
-        $entityManager->persist($session);
-        $entityManager->flush();
+        // Réutilise la session guest créée sur la landing page d'invitation
+        $guestSessionId = $request->getSession()->get('guest_quiz_session_id');
+        $session = null;
+        if ($guestSessionId) {
+            $session = $quizSessionRepository->find($guestSessionId);
+            $request->getSession()->remove('guest_quiz_session_id');
+        }
+        if (!$session) {
+            $session = $this->createQuizSession($template);
+            $entityManager->persist($session);
+            $entityManager->flush();
+        }
 
         $questions = $this->getQuizQuestions($template, $questionRepository);
 

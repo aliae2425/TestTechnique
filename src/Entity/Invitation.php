@@ -35,6 +35,9 @@ class Invitation
     #[ORM\Column(length: 10, options: ['default' => 'email'])]
     private string $type = 'email';
 
+    #[ORM\Column(length: 20, options: ['default' => 'membership'])]
+    private string $purpose = 'membership';
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
 
@@ -175,6 +178,18 @@ class Invitation
     public function setCompany(?Company $company): static
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function getPurpose(): string
+    {
+        return $this->purpose;
+    }
+
+    public function setPurpose(string $purpose): static
+    {
+        $this->purpose = $purpose;
 
         return $this;
     }

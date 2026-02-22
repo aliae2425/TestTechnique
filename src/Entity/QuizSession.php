@@ -33,6 +33,9 @@ class QuizSession
     #[ORM\Column(nullable: true)]
     private ?float $finalScore = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $participantName = null;
+
     /**
      * @var Collection<int, UserReponses>
      */
@@ -116,14 +119,23 @@ class QuizSession
 
     public function getParticipantName(): string
     {
+        if ($this->participantName !== null) {
+            return $this->participantName;
+        }
         if ($this->getUser()) {
-             // Assuming User has generic identifiers, using email or default string repr
-             return (string) $this->getUser()->getUserIdentifier(); 
+            return (string) $this->getUser()->getUserIdentifier();
         }
         if ($this->getInvitation()) {
             return "Invitation";
         }
         return "Anonyme";
+    }
+
+    public function setParticipantName(?string $participantName): static
+    {
+        $this->participantName = $participantName;
+
+        return $this;
     }
 
     public function getDurationString(): string

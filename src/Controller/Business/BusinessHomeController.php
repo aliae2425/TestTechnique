@@ -82,7 +82,7 @@ final class BusinessHomeController extends AbstractController
     }
 
     /**
-     * Gestion des Candidats / Invitations
+     * Gestion des Candidats / Résultats quiz
      */
     #[Route('/candidates', name: 'candidates_list')]
     public function listCandidates(InvitationRepository $invitationRepo): Response
@@ -95,7 +95,7 @@ final class BusinessHomeController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez être rattaché à une entreprise.');
         }
 
-        $invitations = $invitationRepo->findBy(['company' => $company], ['createdAt' => 'DESC']);
+        $invitations = $invitationRepo->findBy(['company' => $company, 'purpose' => 'quiz'], ['createdAt' => 'DESC']);
 
         return $this->render('entreprise/candidates/index.html.twig', [
             'invitations' => $invitations,
@@ -128,6 +128,8 @@ final class BusinessHomeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $token = bin2hex(random_bytes(32));
             $invitation->setToken($token);
+            $invitation->setType('email');
+            $invitation->setPurpose('membership');
             $invitation->setCompany($company);
             $invitation->setCreatedAt(new \DateTimeImmutable());
             $invitation->setExpiresAt(new \DateTimeImmutable('+7 days'));
@@ -236,8 +238,46 @@ final class BusinessHomeController extends AbstractController
             throw $this->createNotFoundException('Invitation non trouvée.');
         }
 
+        $resultsByQuestion = [];
+        $totalQuestions = 0;
+        $quizSession = $invitation->getQuizSession();
+
+        if ($quizSession) {
+            foreach ($quizSession->getUserReponses() as $userReponse) {
+                $questionId = $userReponse->getQuestion()->getId();
+                if (!isset($resultsByQuestion[$questionId])) {
+                    $question = $userReponse->getQuestion();
+                    $correctAnswerIds = [];
+                    foreach ($question->getReponses() as $answer) {
+                        if ($answer->isCorrect()) {
+                            $correctAnswerIds[] = $answer->getId();
+                        }
+                    }
+                    sort($correctAnswerIds);
+                    $resultsByQuestion[$questionId] = [
+                        'question' => $question,
+                        'selectedAnswers' => [],
+                        'correctAnswerIds' => $correctAnswerIds,
+                        'isCorrect' => false,
+                    ];
+                }
+                if ($userReponse->getReponse()) {
+                    $resultsByQuestion[$questionId]['selectedAnswers'][] = $userReponse->getReponse();
+                }
+            }
+            foreach ($resultsByQuestion as &$result) {
+                $selectedIds = array_map(fn($a) => $a->getId(), $result['selectedAnswers']);
+                sort($selectedIds);
+                $result['isCorrect'] = ($selectedIds === $result['correctAnswerIds']);
+            }
+            unset($result);
+            $totalQuestions = count($resultsByQuestion);
+        }
+
         return $this->render('entreprise/candidates/detail.html.twig', [
             'invitation' => $invitation,
+            'resultsByQuestion' => $resultsByQuestion,
+            'totalQuestions' => $totalQuestions,
         ]);
     }
 }

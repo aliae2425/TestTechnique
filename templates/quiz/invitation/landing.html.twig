@@ -1,0 +1,118 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}
+    {% if invitation.company %}{{ invitation.company.name }} — {% endif %}Invitation au quiz
+{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-lg">
+
+        {% if expired %}
+            {# Lien expiré #}
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-10 text-center">
+                <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                    <twig:ux:icon name="tabler:clock-off" class="w-8 h-8 text-red-400" />
+                </div>
+                <h1 class="text-xl font-bold text-slate-800 mb-2">Lien expiré</h1>
+                <p class="text-sm text-slate-500">Ce lien d'invitation n'est plus valide. Contactez l'entreprise pour obtenir un nouveau lien.</p>
+            </div>
+        {% else %}
+
+            {# Logo + Nom entreprise #}
+            {% if invitation.company %}
+            <div class="flex flex-col items-center mb-8">
+                {% if invitation.company.logo %}
+                    <img
+                        src="{{ vich_uploader_asset(invitation.company, 'imageFile') }}"
+                        alt="{{ invitation.company.name }}"
+                        class="h-20 w-20 object-contain rounded-2xl border border-slate-100 shadow-sm mb-3 bg-white p-1"
+                    />
+                {% else %}
+                    <div class="h-20 w-20 rounded-2xl bg-cyan-600 flex items-center justify-center mb-3 shadow-sm">
+                        <twig:ux:icon name="tabler:building" class="w-10 h-10 text-white" />
+                    </div>
+                {% endif %}
+                <h1 class="text-2xl font-bold text-slate-900">{{ invitation.company.name }}</h1>
+                {% if invitation.company.description %}
+                    <p class="mt-2 text-sm text-slate-500 text-center max-w-xs">{{ invitation.company.description }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {# Quiz badge #}
+            {% if invitation.quizTemplate %}
+            <div class="flex items-center gap-3 p-4 bg-violet-50 border border-violet-200 rounded-xl mb-6">
+                <div class="w-10 h-10 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0">
+                    <twig:ux:icon name="tabler:clipboard-list" class="w-5 h-5 text-white" />
+                </div>
+                <div>
+                    <p class="text-xs text-violet-600 font-medium uppercase tracking-wide">Quiz</p>
+                    <p class="text-sm font-bold text-violet-900">{{ invitation.quizTemplate.titre }}</p>
+                    <p class="text-xs text-violet-500">{{ invitation.quizTemplate.type }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            {# Formulaire #}
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
+                <h2 class="text-lg font-semibold text-slate-800 mb-1">Prêt à commencer ?</h2>
+                <p class="text-sm text-slate-500 mb-6">
+                    {% if invitation.type == 'email' %}
+                        Confirmez vos informations et cliquez sur <strong>Go</strong> pour lancer le quiz.
+                    {% else %}
+                        Renseignez votre prénom et nom puis cliquez sur <strong>Go</strong> pour lancer le quiz.
+                    {% endif %}
+                </p>
+
+                <form method="POST" action="{{ path('quiz_invitation_start', {token: invitation.token}) }}" class="space-y-4">
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="grid gap-1.5">
+                            <label class="text-sm font-medium text-slate-700" for="prenom">Prénom</label>
+                            <input
+                                type="text"
+                                id="prenom"
+                                name="prenom"
+                                value="{{ invitation.prenom ?? '' }}"
+                                {% if invitation.type == 'email' %}readonly{% endif %}
+                                required
+                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 {% if invitation.type == 'email' %}bg-slate-50 text-slate-500 cursor-not-allowed{% endif %}"
+                                placeholder="Votre prénom"
+                            />
+                        </div>
+                        <div class="grid gap-1.5">
+                            <label class="text-sm font-medium text-slate-700" for="nom">Nom</label>
+                            <input
+                                type="text"
+                                id="nom"
+                                name="nom"
+                                value="{{ invitation.nom ?? '' }}"
+                                {% if invitation.type == 'email' %}readonly{% endif %}
+                                required
+                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 {% if invitation.type == 'email' %}bg-slate-50 text-slate-500 cursor-not-allowed{% endif %}"
+                                placeholder="Votre nom"
+                            />
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-cyan-600 text-white text-sm font-semibold rounded-xl hover:bg-cyan-700 transition-colors shadow-sm mt-2"
+                    >
+                        <twig:ux:icon name="tabler:player-play" class="w-4 h-4" />
+                        Go — Lancer le quiz
+                    </button>
+                </form>
+            </div>
+
+            {# Expiration info #}
+            <p class="text-center text-xs text-slate-400 mt-4">
+                Ce lien expire le {{ invitation.expiresAt|date('d/m/Y à H:i') }}
+            </p>
+
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

@@ -103,6 +103,7 @@ final class InvitationController extends AbstractController
             $token = bin2hex(random_bytes(32));
             $invitation->setToken($token);
             $invitation->setType('email');
+            $invitation->setPurpose('quiz');
             $invitation->setCompany($company);
             $invitation->setCreatedAt(new \DateTimeImmutable());
             $invitation->setExpiresAt(new \DateTimeImmutable('+7 days'));
@@ -111,7 +112,7 @@ final class InvitationController extends AbstractController
             $entityManager->flush();
 
             $invitationUrl = $urlGenerator->generate(
-                'app_register_invitation',
+                'quiz_invitation_landing',
                 ['token' => $token],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
@@ -167,6 +168,7 @@ final class InvitationController extends AbstractController
             $token = bin2hex(random_bytes(32));
             $invitation->setToken($token);
             $invitation->setType('link');
+            $invitation->setPurpose('quiz');
             $invitation->setCompany($company);
             $invitation->setCreatedAt(new \DateTimeImmutable());
             $invitation->setExpiresAt(new \DateTimeImmutable('+24 hours'));
@@ -175,7 +177,7 @@ final class InvitationController extends AbstractController
             $entityManager->flush();
 
             $url = $urlGenerator->generate(
-                'app_register_invitation',
+                'quiz_invitation_landing',
                 ['token' => $token],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
