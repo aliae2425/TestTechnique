@@ -27,6 +27,10 @@ class QuizTemplate
     #[ORM\Column(nullable: true)]
     private ?int $timeLimit = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Company $company = null;
+
     #[ORM\ManyToMany(targetEntity: QuizRule::class, inversedBy: 'templates', cascade: ['persist'])]
     private Collection $Rules;
 
@@ -139,6 +143,18 @@ class QuizTemplate
     public function removeQuestion(Question $question): static
     {
         $this->Questions->removeElement($question);
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
 
         return $this;
     }

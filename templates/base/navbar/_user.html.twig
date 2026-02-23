@@ -53,7 +53,7 @@
             {% if is_granted('ROLE_ENTREPRISE') %}
             <div class="h-px bg-slate-100 mx-2 my-1"></div>
             <div class="p-1">
-                <a href="{{ path('business_profile') }}" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-cyan-50 hover:text-cyan-700 transition-colors">
+                <a href="{{ path('business_quiz_index') }}" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-cyan-50 hover:text-cyan-700 transition-colors">
                     <twig:ux:icon name="tabler:adjustments-horizontal" class="w-4 h-4" />
                     Gérer mes tests
                 </a>

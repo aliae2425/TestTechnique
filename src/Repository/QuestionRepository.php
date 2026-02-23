@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Company;
 use App\Entity\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -102,7 +103,7 @@ class QuestionRepository extends ServiceEntityRepository
     public function getAnswerDistribution(int $questionId): array
     {
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('a.text, a.is_correct, COUNT(ur.id) as count')
+            ->select('a.id, a.text, a.is_correct, COUNT(ur.id) as count')
             ->from('App\Entity\Answer', 'a')
             ->leftJoin('App\Entity\UserReponses', 'ur', 'WITH', 'ur.Reponse = a')
             ->where('a.question = :questionId')
@@ -110,6 +111,40 @@ class QuestionRepository extends ServiceEntityRepository
             ->groupBy('a.id')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Questions disponibles pour une company : les siennes + les questions plateforme (company IS NULL)
+     * Avec filtres optionnels sur level et type.
+     *
+     * @return Question[]
+     */
+    public function findForCompany(Company $company, ?string $level = null, ?string $type = null): array
+    {
+        $qb = $this->createQueryBuilder('q')
+            ->where('q.company = :company OR q.company IS NULL')
+            ->setParameter('company', $company)
+            ->orderBy('q.titled', 'ASC');
+
+        if ($level) {
+            $qb->andWhere('q.level = :level')->setParameter('level', $level);
+        }
+        if ($type) {
+            $qb->andWhere('q.type = :type')->setParameter('type', $type);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * QueryBuilder pour le form EntityType (company + plateforme)
+     */
+    public function createAvailableForCompanyQB(Company $company): \Doctrine\ORM\QueryBuilder
+    {
+        return $this->createQueryBuilder('q')
+            ->where('q.company = :company OR q.company IS NULL')
+            ->setParameter('company', $company)
+            ->orderBy('q.titled', 'ASC');
     }
 
     //    {
