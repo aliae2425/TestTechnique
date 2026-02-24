@@ -60,6 +60,13 @@ final class BusinessQuizController extends AbstractController
             $platformQuestions = array_filter($allQuestions, fn($q) => $q->getCompany() === null);
         }
 
+        // --- Question stats for default panel (questions with at least 1 attempt, worst rate first) ---
+        $allQuestionStats = $questionRepo->getQuestionStats('successRate', 'ASC');
+        $questionStats = array_values(array_filter(
+            $allQuestionStats,
+            fn($s) => (int) $s['totalAttempts'] > 0
+        ));
+
         // --- Forms ---
         $quizForm = $this->createForm(QuizTemplateType::class, null, [
             'action' => $this->generateUrl('business_quiz_new_quiz'),
@@ -85,6 +92,7 @@ final class BusinessQuizController extends AbstractController
             'filterOwner' => $filterOwner,
             'activeTab' => $request->query->get('tab', 'quiz'),
             'statsUrl' => $this->generateUrl('business_quiz_question_stats', ['id' => 0]),
+            'questionStats' => $questionStats,
         ]);
     }
 
