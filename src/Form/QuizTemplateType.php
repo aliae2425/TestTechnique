@@ -2,11 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Company;
-use App\Entity\Question;
 use App\Entity\QuizTemplate;
-use App\Repository\QuestionRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -20,8 +16,6 @@ class QuizTemplateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $company = $options['company'];
-
         $builder
             ->add('Titre', TextType::class, [
                 'label' => 'Titre du quiz',
@@ -41,17 +35,14 @@ class QuizTemplateType extends AbstractType
                 'label' => 'Limite de temps (secondes, laisser vide = sans limite)',
                 'required' => false,
             ])
-            ->add('Questions', EntityType::class, [
-                'class' => Question::class,
-                'choice_label' => fn(Question $q) => sprintf('[%s] %s', $q->getLevel() ?? '?', $q->getTitled()),
-                'multiple' => true,
-                'expanded' => false,
+            ->add('Questions', CollectionType::class, [
+                'entry_type' => BusinessQuestionType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
                 'required' => false,
-                'label' => 'Questions à inclure',
-                'query_builder' => function (QuestionRepository $repo) use ($company) {
-                    return $repo->createAvailableForCompanyQB($company);
-                },
-                'group_by' => fn(Question $q) => $q->getCompany() ? '⭐ Vos questions' : 'Questions plateforme',
+                'label' => false,
+                'prototype_name' => '__question_idx__',
             ])
             ->add('Rules', CollectionType::class, [
                 'entry_type' => QuizRuleType::class,
@@ -67,8 +58,6 @@ class QuizTemplateType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => QuizTemplate::class,
-            'company' => null,
         ]);
-        $resolver->setAllowedTypes('company', ['null', Company::class]);
     }
 }

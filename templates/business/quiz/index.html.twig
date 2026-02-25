@@ -278,11 +278,25 @@
                         </div>
                     </div>
 
-                    {# Fixed section — questions multiselect #}
-                    <div id="section-fixed" class="space-y-2">
-                        <label class="text-sm font-medium text-slate-700 block">Questions à inclure</label>
-                        <p class="text-xs text-slate-400">Maintenez Ctrl/Cmd pour sélectionner plusieurs questions.</p>
-                        {{ form_widget(quizForm.Questions, {'attr': {'class': 'w-full border border-slate-200 rounded-lg text-sm p-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white', 'size': '8'}}) }}
+                    {# Fixed section — création inline de questions #}
+                    <div id="section-fixed" class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-slate-700">Questions du quiz</label>
+                            <button type="button" onclick="addQuizQuestion()"
+                                    class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium text-cyan-700 border border-cyan-200 rounded-lg hover:bg-cyan-50 transition-colors">
+                                <twig:ux:icon name="tabler:plus" class="w-3 h-3" />
+                                Ajouter une question
+                            </button>
+                        </div>
+                        <div id="quiz-questions-collection"
+                             data-prototype="{{ form_widget(quizForm.Questions.vars.prototype)|e('html_attr') }}"
+                             data-index="{{ quizForm.Questions|length }}"
+                             class="space-y-3">
+                            {% for question in quizForm.Questions %}
+                                {# Questions existantes (vide lors de la création) #}
+                            {% endfor %}
+                        </div>
+                        <p class="text-xs text-slate-400">Les questions créées ici seront rattachées à votre entreprise.</p>
                     </div>
 
                     {# Balanced section — rules collection #}
@@ -797,15 +811,146 @@ function onModeChange(mode) {
 
     if (mode === 'Fixed') {
         fixedSection.style.display = 'block';
-        fixedSection.querySelectorAll('select').forEach(el => el.disabled = false);
+        fixedSection.querySelectorAll('input, select, textarea').forEach(el => el.disabled = false);
         balancedSection.style.display = 'none';
-        balancedSection.querySelectorAll('input, select').forEach(el => el.disabled = true);
+        balancedSection.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
     } else {
         balancedSection.style.display = 'block';
-        balancedSection.querySelectorAll('input, select').forEach(el => el.disabled = false);
+        balancedSection.querySelectorAll('input, select, textarea').forEach(el => el.disabled = false);
         fixedSection.style.display = 'none';
-        fixedSection.querySelectorAll('select').forEach(el => el.disabled = true);
+        fixedSection.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
     }
+}
+
+// ————————————————————————————————————————
+// Quiz Questions collection (Fixed mode — inline creation)
+// ————————————————————————————————————————
+function addQuizQuestion() {
+    const container = document.getElementById('quiz-questions-collection');
+    const qIdx = parseInt(container.dataset.index);
+    const proto = container.dataset.prototype;
+    const html = proto.replace(/__question_idx__/g, qIdx);
+    container.dataset.index = qIdx + 1;
+
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+
+    // Apply styles to form controls
+    tmp.querySelectorAll('input[type="text"]').forEach(el => {
+        el.className = 'flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500';
+    });
+    tmp.querySelectorAll('textarea').forEach(el => {
+        el.className = 'flex w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500';
+        el.setAttribute('rows', '2');
+    });
+    tmp.querySelectorAll('select').forEach(el => {
+        el.className = 'flex h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500';
+    });
+
+    // Extract fields
+    const titledInput = tmp.querySelector('input[type="text"]');
+    const descTextarea = tmp.querySelector('textarea');
+    const selects = tmp.querySelectorAll('select');
+    const levelSelect = selects[0];
+    const typeSelect = selects[1];
+    const answersContainer = tmp.querySelector('[data-prototype]');
+    if (answersContainer) {
+        answersContainer.className = 'space-y-2';
+        answersContainer.dataset.answerIndex = '0';
+    }
+
+    const card = document.createElement('div');
+    card.className = 'question-wrapper border border-slate-200 rounded-xl overflow-hidden';
+    card.innerHTML = `
+        <div class="flex items-center justify-between px-4 py-2.5 bg-slate-100 border-b border-slate-200">
+            <span class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Question ${qIdx + 1}</span>
+            <button type="button" onclick="this.closest('.question-wrapper').remove()"
+                    class="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="p-4 space-y-3">
+            <div class="grid gap-1">
+                <label class="text-xs font-medium text-slate-600">Intitulé</label>
+                ${titledInput ? titledInput.outerHTML : ''}
+            </div>
+            <div class="grid gap-1">
+                <label class="text-xs font-medium text-slate-600">Description</label>
+                ${descTextarea ? descTextarea.outerHTML : ''}
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="grid gap-1">
+                    <label class="text-xs font-medium text-slate-600">Niveau</label>
+                    ${levelSelect ? levelSelect.outerHTML : ''}
+                </div>
+                <div class="grid gap-1">
+                    <label class="text-xs font-medium text-slate-600">Thème</label>
+                    ${typeSelect ? typeSelect.outerHTML : ''}
+                </div>
+            </div>
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label class="text-xs font-medium text-slate-600">Réponses</label>
+                    <button type="button" onclick="addQuizAnswer(this)"
+                            class="text-xs text-cyan-600 hover:text-cyan-800 font-medium transition-colors">
+                        + Réponse
+                    </button>
+                </div>
+                ${answersContainer ? answersContainer.outerHTML : '<div class="space-y-2"></div>'}
+            </div>
+        </div>`;
+
+    container.appendChild(card);
+}
+
+function addQuizAnswer(btn) {
+    const wrapper = btn.closest('.question-wrapper');
+    const answersContainer = wrapper.querySelector('[data-prototype]');
+    if (!answersContainer) return;
+
+    const answerIdx = parseInt(answersContainer.dataset.answerIndex || '0');
+    const proto = answersContainer.dataset.prototype;
+    const html = proto.replace(/__answer_idx__/g, answerIdx);
+    answersContainer.dataset.answerIndex = answerIdx + 1;
+
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+
+    tmp.querySelectorAll('input[type="text"], textarea').forEach(el => {
+        el.className = 'flex w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+    });
+    tmp.querySelectorAll('input[type="checkbox"]').forEach(el => {
+        el.className = 'w-4 h-4 accent-green-600';
+    });
+
+    const allTextInputs = tmp.querySelectorAll('input[type="text"], textarea');
+    const textEl = allTextInputs[0];
+    const checkboxEl = tmp.querySelector('input[type="checkbox"]');
+    const feedbackEl = allTextInputs[1];
+
+    const div = document.createElement('div');
+    div.className = 'answer-item bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-2';
+    div.innerHTML = `
+        <div class="flex items-start gap-2">
+            <div class="flex-1">
+                <label class="text-xs text-slate-500 block mb-1">Texte de la réponse</label>
+                ${textEl ? textEl.outerHTML : ''}
+            </div>
+            <div class="flex flex-col items-center gap-1 pt-5 shrink-0">
+                <label class="text-xs text-slate-500">✓</label>
+                ${checkboxEl ? checkboxEl.outerHTML : ''}
+            </div>
+        </div>
+        ${feedbackEl ? `<div>
+            <label class="text-xs text-slate-500 block mb-1">Feedback</label>
+            ${feedbackEl.outerHTML}
+        </div>` : ''}
+        <button type="button" onclick="this.closest('.answer-item').remove()"
+                class="text-xs text-red-500 hover:text-red-700 transition-colors">✕ Supprimer</button>`;
+
+    answersContainer.appendChild(div);
 }
 
 // ————————————————————————————————————————

@@ -71,7 +71,6 @@ final class BusinessQuizController extends AbstractController
         $quizForm = $this->createForm(QuizTemplateType::class, null, [
             'action' => $this->generateUrl('business_quiz_new_quiz'),
             'method' => 'POST',
-            'company' => $company,
         ]);
 
         $questionForm = $this->createForm(BusinessQuestionType::class, null, [
@@ -113,7 +112,7 @@ final class BusinessQuizController extends AbstractController
         }
 
         $quiz = new QuizTemplate();
-        $form = $this->createForm(QuizTemplateType::class, $quiz, ['company' => $company]);
+        $form = $this->createForm(QuizTemplateType::class, $quiz);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -121,6 +120,10 @@ final class BusinessQuizController extends AbstractController
 
             // Nettoyer la section non utilisée selon le mode
             if ($quiz->getMode() === 'Fixed') {
+                // Lier la company à chaque question créée inline
+                foreach ($quiz->getQuestions() as $question) {
+                    $question->setCompany($company);
+                }
                 foreach ($quiz->getRules()->toArray() as $rule) {
                     $quiz->removeRule($rule);
                 }
