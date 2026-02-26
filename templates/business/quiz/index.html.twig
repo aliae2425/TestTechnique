@@ -616,6 +616,31 @@
                         </div>
                     </div>
 
+                    {# Image dropzone #}
+                    <div class="grid gap-1.5">
+                        <label class="text-sm font-medium text-slate-700">
+                            Image <span class="text-xs text-slate-400 font-normal">(optionnel)</span>
+                        </label>
+                        <div class="dropzone-wrapper" data-dropzone>
+                            {{ form_widget(questionForm.imageFile, {'attr': {'class': 'sr-only', 'accept': 'image/*'}}) }}
+                            <div class="dropzone-area rounded-xl border-2 border-dashed border-slate-200 p-5 text-center cursor-pointer hover:border-violet-400 hover:bg-violet-50/30 transition-all"
+                                 onclick="this.closest('[data-dropzone]').querySelector('input[type=file]').click()">
+                                <div class="dropzone-empty flex flex-col items-center gap-1.5 pointer-events-none">
+                                    <twig:ux:icon name="tabler:photo-up" class="w-7 h-7 text-slate-300" />
+                                    <p class="text-sm text-slate-500">Glissez une image ou <span class="text-violet-600 font-medium">parcourez</span></p>
+                                    <p class="text-xs text-slate-400">PNG, JPG, WebP — max 5 Mo</p>
+                                </div>
+                                <div class="dropzone-preview hidden items-center gap-3 justify-center">
+                                    <img class="preview-img h-20 w-20 object-cover rounded-lg border border-slate-200" src="" alt="">
+                                    <button type="button" class="remove-preview text-xs text-red-500 hover:text-red-700 font-medium transition-colors"
+                                            onclick="event.stopPropagation(); clearDropzone(this.closest('[data-dropzone]'))">
+                                        ✕ Supprimer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {# Answers collection #}
                     <div>
                         <div class="flex items-center justify-between mb-2">
@@ -823,6 +848,84 @@ function onModeChange(mode) {
 }
 
 // ————————————————————————————————————————
+// Dropzone helpers
+// ————————————————————————————————————————
+function initDropzone(wrapper) {
+    const input = wrapper.querySelector('input[type="file"]');
+    if (!input) return;
+    input.classList.add('sr-only');
+
+    const area    = wrapper.querySelector('.dropzone-area');
+    const empty   = wrapper.querySelector('.dropzone-empty');
+    const preview = wrapper.querySelector('.dropzone-preview');
+    const img     = wrapper.querySelector('.preview-img');
+
+    area.addEventListener('dragover', e => {
+        e.preventDefault();
+        area.classList.add('border-violet-400', 'bg-violet-50');
+    });
+    area.addEventListener('dragleave', () => {
+        area.classList.remove('border-violet-400', 'bg-violet-50');
+    });
+    area.addEventListener('drop', e => {
+        e.preventDefault();
+        area.classList.remove('border-violet-400', 'bg-violet-50');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) assignFile(input, file);
+    });
+    input.addEventListener('change', () => {
+        if (input.files[0]) showPreview(input.files[0]);
+    });
+
+    function assignFile(inp, file) {
+        try { const dt = new DataTransfer(); dt.items.add(file); inp.files = dt.files; } catch(e) {}
+        showPreview(file);
+    }
+    function showPreview(file) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            img.src = ev.target.result;
+            empty.classList.add('hidden');
+            preview.classList.remove('hidden');
+            preview.classList.add('flex');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function clearDropzone(wrapper) {
+    const input   = wrapper.querySelector('input[type="file"]');
+    const empty   = wrapper.querySelector('.dropzone-empty');
+    const preview = wrapper.querySelector('.dropzone-preview');
+    const img     = wrapper.querySelector('.preview-img');
+    if (input) input.value = '';
+    if (img) img.src = '';
+    if (empty)   { empty.classList.remove('hidden'); }
+    if (preview) { preview.classList.add('hidden'); preview.classList.remove('flex'); }
+}
+
+function buildDropzoneHTML(fileInput) {
+    // fileInput: the <input type="file"> extracted from the prototype
+    fileInput.classList.add('sr-only');
+    return `
+        <div class="dropzone-wrapper" data-dropzone>
+            ${fileInput.outerHTML}
+            <div class="dropzone-area rounded-xl border-2 border-dashed border-slate-200 p-4 text-center cursor-pointer hover:border-cyan-400 hover:bg-cyan-50/30 transition-all"
+                 onclick="this.closest('[data-dropzone]').querySelector('input[type=file]').click()">
+                <div class="dropzone-empty flex flex-col items-center gap-1 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4-4a3 3 0 014 0l4 4m-4-4v9M16 12l2-2a2 2 0 012 0l2 2M14 8a2 2 0 114 0 2 2 0 01-4 0z"/></svg>
+                    <p class="text-xs text-slate-500">Glissez ou <span class="text-cyan-600 font-medium">parcourez</span></p>
+                </div>
+                <div class="dropzone-preview hidden items-center gap-2 justify-center">
+                    <img class="preview-img h-14 w-14 object-cover rounded-lg border border-slate-200" src="" alt="">
+                    <button type="button" class="remove-preview text-xs text-red-500 hover:text-red-700 font-medium"
+                            onclick="event.stopPropagation(); clearDropzone(this.closest('[data-dropzone]'))">✕</button>
+                </div>
+            </div>
+        </div>`;
+}
+
+// ————————————————————————————————————————
 // Quiz Questions collection (Fixed mode — inline creation)
 // ————————————————————————————————————————
 function addQuizQuestion() {
@@ -848,16 +951,19 @@ function addQuizQuestion() {
     });
 
     // Extract fields
-    const titledInput = tmp.querySelector('input[type="text"]');
+    const titledInput  = tmp.querySelector('input[type="text"]');
     const descTextarea = tmp.querySelector('textarea');
-    const selects = tmp.querySelectorAll('select');
-    const levelSelect = selects[0];
-    const typeSelect = selects[1];
+    const selects      = tmp.querySelectorAll('select');
+    const levelSelect  = selects[0];
+    const typeSelect   = selects[1];
+    const fileInput    = tmp.querySelector('input[type="file"]');
     const answersContainer = tmp.querySelector('[data-prototype]');
     if (answersContainer) {
         answersContainer.className = 'space-y-2';
         answersContainer.dataset.answerIndex = '0';
     }
+
+    const dropzoneHTML = fileInput ? buildDropzoneHTML(fileInput) : '';
 
     const card = document.createElement('div');
     card.className = 'question-wrapper border border-slate-200 rounded-xl overflow-hidden';
@@ -890,6 +996,7 @@ function addQuizQuestion() {
                     ${typeSelect ? typeSelect.outerHTML : ''}
                 </div>
             </div>
+            ${dropzoneHTML ? `<div class="grid gap-1"><label class="text-xs font-medium text-slate-600">Image <span class="font-normal text-slate-400">(optionnel)</span></label>${dropzoneHTML}</div>` : ''}
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <label class="text-xs font-medium text-slate-600">Réponses</label>
@@ -903,6 +1010,9 @@ function addQuizQuestion() {
         </div>`;
 
     container.appendChild(card);
+
+    // Initialize dropzone on the freshly inserted card
+    card.querySelectorAll('[data-dropzone]').forEach(w => initDropzone(w));
 }
 
 function addQuizAnswer(btn) {
@@ -1059,6 +1169,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Init mode switcher based on current value
     const modeSelect = document.querySelector('#quiz-form select[name*="Mode"]');
     if (modeSelect) onModeChange(modeSelect.value);
+
+    // Init dropzones in the standalone question form
+    document.querySelectorAll('[data-dropzone]').forEach(w => initDropzone(w));
 });
 </script>
 {% endblock %}

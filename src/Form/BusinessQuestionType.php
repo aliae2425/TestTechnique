@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class BusinessQuestionType extends AbstractType
 {
@@ -43,6 +44,13 @@ class BusinessQuestionType extends AbstractType
                     'Coordination' => 'Coordination',
                     'Plugins' => 'Plugins',
                 ],
+            ])
+            ->add('imageFile', VichFileType::class, [
+                'label' => 'Image',
+                'required' => false,
+                'allow_delete' => false,
+                'download_uri' => false,
+                'attr' => ['accept' => 'image/*'],
             ])
             ->add('Reponses', CollectionType::class, [
                 'entry_type' => AnswerType::class,
